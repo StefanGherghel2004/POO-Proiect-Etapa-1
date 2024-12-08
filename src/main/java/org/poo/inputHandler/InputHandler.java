@@ -22,8 +22,19 @@ public class InputHandler {
             return new CreateCardCommand(bank, mapper);
         } else if (command.getCommand().equals("deleteCard")) {
             return new DeleteCardCommand(bank, mapper);
-        } else {
+        } else if (command.getCommand().equals("setMinimumBalance")) {
+            return new SetMinimumBalanceCommand(bank, mapper);
+        } else if (command.getCommand().equals("payOnline")) {
+            return new PayOnlineCommand(bank, mapper);
+        } else if (command.getCommand().equals("sendMoney")) {
+            return new SendMoneyCommand(bank, mapper);
+        } else if (command.getCommand().equals("setAlias")) {
+            return new SetAliasCommand(bank, mapper);
+        } else if (command.getCommand().equals("printTransactions")) {
+            return new PrintTransactionsCommand(bank, mapper);
+        } else  {
             return new PrintUsersCommand(bank, mapper);
         }
+
     }
 }

@@ -8,6 +8,7 @@ import org.poo.checker.Checker;
 import org.poo.checker.CheckerConstants;
 import org.poo.command.Command;
 import org.poo.fileio.CommandInput;
+import org.poo.fileio.ExchangeInput;
 import org.poo.fileio.ObjectInput;
 import org.poo.fileio.UserInput;
 
@@ -16,9 +17,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.Objects;
+import java.util.*;
 
 import static org.poo.inputHandler.InputHandler.handler;
 import static org.poo.utils.Utils.generateIBAN;
@@ -83,9 +82,12 @@ public final class Main {
         ArrayNode output = objectMapper.createArrayNode();
         ObjectMapper mapper = new ObjectMapper();
         Bank bank = new Bank();
-        for (UserInput user : inputData.getUsers()) {
-            bank.addUser(user);
-        }
+        // initialise users
+            bank.addUsers(inputData.getUsers())
+                    .addExchangeRates(inputData.getExchangeRates())
+                    .addSecondaryExchangeRates();
+
+        System.out.println("TEST");
         Command myCommand;
         for (CommandInput command : inputData.getCommands()) {
             myCommand = handler(command, bank, mapper);
@@ -95,29 +97,7 @@ public final class Main {
                 output.add(myCommand.getCommandOutput());
             }
         }
-
-        //System.out.println(bank.getUsers().size());
-       //System.out.println(bank.getUsers().get(0).getAccounts().get(0).getIban());
         resetRandom();
-        /*
-         * TODO Implement your function here
-         *
-         * How to add output to the output array?
-         * There are multiple ways to do this, here is one example:
-         *
-         * ObjectMapper mapper = new ObjectMapper();
-         *
-         * ObjectNode objectNode = mapper.createObjectNode();
-         * objectNode.put("field_name", "field_value");
-         *
-         * ArrayNode arrayNode = mapper.createArrayNode();
-         * arrayNode.add(objectNode);
-         *
-         * output.add(arrayNode);
-         * output.add(objectNode);
-         *
-         */
-
         ObjectWriter objectWriter = objectMapper.writerWithDefaultPrettyPrinter();
         objectWriter.writeValue(new File(filePath2), output);
     }

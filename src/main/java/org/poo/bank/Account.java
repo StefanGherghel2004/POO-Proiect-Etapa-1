@@ -19,6 +19,10 @@ public class Account {
     private String type;
     private List<Card> cards = new ArrayList<Card>();
 
+    private boolean setMinBalance;
+    private double minBalance;
+
+
     public Account(String iban, double balance, String currency, String type) {
         this.iban = iban;
         this.balance = balance;
