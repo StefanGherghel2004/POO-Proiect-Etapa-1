@@ -3,9 +3,13 @@ package org.poo.main;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import com.fasterxml.jackson.databind.node.ArrayNode;
+import org.poo.bank.Bank;
 import org.poo.checker.Checker;
 import org.poo.checker.CheckerConstants;
+import org.poo.command.Command;
+import org.poo.fileio.CommandInput;
 import org.poo.fileio.ObjectInput;
+import org.poo.fileio.UserInput;
 
 import java.io.File;
 import java.io.IOException;
@@ -15,6 +19,10 @@ import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.Objects;
+
+import static org.poo.inputHandler.InputHandler.handler;
+import static org.poo.utils.Utils.generateIBAN;
+import static org.poo.utils.Utils.resetRandom;
 
 /**
  * The entry point to this homework. It runs the checker that tests your implementation.
@@ -73,7 +81,24 @@ public final class Main {
         ObjectInput inputData = objectMapper.readValue(file, ObjectInput.class);
 
         ArrayNode output = objectMapper.createArrayNode();
+        ObjectMapper mapper = new ObjectMapper();
+        Bank bank = new Bank();
+        for (UserInput user : inputData.getUsers()) {
+            bank.addUser(user);
+        }
+        Command myCommand;
+        for (CommandInput command : inputData.getCommands()) {
+            myCommand = handler(command, bank, mapper);
+            myCommand.execute(command);
+            myCommand.updateOutput(command, mapper);
+            if (!myCommand.getCommandOutput().isEmpty()) {
+                output.add(myCommand.getCommandOutput());
+            }
+        }
 
+        //System.out.println(bank.getUsers().size());
+       //System.out.println(bank.getUsers().get(0).getAccounts().get(0).getIban());
+        resetRandom();
         /*
          * TODO Implement your function here
          *
