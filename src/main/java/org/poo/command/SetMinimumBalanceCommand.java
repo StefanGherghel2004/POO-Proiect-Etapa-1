@@ -7,20 +7,18 @@ import org.poo.bank.Card;
 import org.poo.bank.User;
 import org.poo.fileio.CommandInput;
 
-public class SetMinimumBalanceCommand extends Command {
+public final class SetMinimumBalanceCommand extends Command {
 
-    public SetMinimumBalanceCommand(Bank bank, ObjectMapper mapper) {
+    public SetMinimumBalanceCommand(final Bank bank, final ObjectMapper mapper) {
         super(bank, mapper);
     }
 
-    public void execute(CommandInput input) {
+    public void execute(final CommandInput input) {
         for (User user: bank.getUsers()) {
             for (Account account : user.getAccounts() ) {
                 if (account.getIban().equals(input.getAccount())) {
                     account.setMinBalance(input.getAmount());
                     account.setSetMinBalance(true);
-                    System.out.println(account.getMinBalance());
-                    System.out.println(account.getBalance());
                     if (account.getBalance() <= account.getMinBalance()) {
                         for (Card card: account.getCards()) {
                             card.setStatus("frozen");
@@ -31,7 +29,7 @@ public class SetMinimumBalanceCommand extends Command {
         }
     }
 
-    public void updateOutput(CommandInput input, ObjectMapper mapper) {
+    public void updateOutput(final CommandInput input, final ObjectMapper mapper) {
 
     }
 }

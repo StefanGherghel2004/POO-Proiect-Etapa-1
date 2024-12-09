@@ -4,13 +4,13 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.poo.bank.*;
 import org.poo.fileio.CommandInput;
 
-public class DeleteCardCommand extends Command {
+public final class DeleteCardCommand extends Command {
 
-    public DeleteCardCommand(Bank bank, ObjectMapper mapper) {
+    public DeleteCardCommand(final Bank bank, final ObjectMapper mapper) {
         super (bank, mapper);
     }
 
-    public void execute(CommandInput input) {
+    public void execute(final CommandInput input) {
         for (User user: bank.getUsers()) {
             if (user.getEmail().equals(input.getEmail())) {
                 for (Account account: user.getAccounts()) {
@@ -29,7 +29,7 @@ public class DeleteCardCommand extends Command {
         }
     }
 
-    public void updateOutput(CommandInput Input, ObjectMapper mapper) {
+    public void updateOutput(final CommandInput Input, final ObjectMapper mapper) {
 
     }
 }

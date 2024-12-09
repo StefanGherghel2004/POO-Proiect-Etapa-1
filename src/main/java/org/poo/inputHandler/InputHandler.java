@@ -7,7 +7,7 @@ import org.poo.fileio.CommandInput;
 
 public class InputHandler {
 
-    static public Command handler(final CommandInput command, final Bank bank, final ObjectMapper mapper) {
+    public static Command handler(final CommandInput command, final Bank bank, final ObjectMapper mapper) {
         if (command.getCommand().equals("printUsers")) {
             return new PrintUsersCommand(bank, mapper);
         } else if (command.getCommand().equals("addAccount")) {
@@ -32,13 +32,13 @@ public class InputHandler {
             return new SetAliasCommand(bank, mapper);
         } else if (command.getCommand().equals("printTransactions")) {
             return new PrintTransactionsCommand(bank, mapper);
-        } else if (command.getCommand().equals("checkCardStatus")){
+        } else if (command.getCommand().equals("checkCardStatus")) {
             return new CardStatusCommand(bank, mapper);
         } else  if (command.getCommand().equals("changeInterestRate")) {
             return new ChangeInterestCommand(bank, mapper);
         } else if (command.getCommand().equals("splitPayment")) {
             return new SplitPaymentCommand(bank, mapper);
-        } else if (command.getCommand().equals("report")){
+        } else if (command.getCommand().equals("report")) {
             return new ReportCommand(bank, mapper);
         } else {
             return null;

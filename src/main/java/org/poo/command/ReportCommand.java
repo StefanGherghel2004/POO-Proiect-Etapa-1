@@ -9,7 +9,7 @@ import org.poo.bank.Transaction;
 import org.poo.bank.User;
 import org.poo.fileio.CommandInput;
 
-public class ReportCommand extends Command{
+public final  class ReportCommand extends Command{
 
     public ReportCommand(final Bank bank, final ObjectMapper mapper) {
         super(bank, mapper);

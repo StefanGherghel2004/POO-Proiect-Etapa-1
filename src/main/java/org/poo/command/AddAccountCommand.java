@@ -6,18 +6,18 @@ import org.poo.bank.User;
 import org.poo.fileio.CommandInput;
 import org.poo.fileio.ObjectInput;
 
-public class AddAccountCommand extends Command {
+public final class AddAccountCommand extends Command {
 
-    public AddAccountCommand(Bank bank, ObjectMapper mapper) {
+    public AddAccountCommand(final Bank bank, final ObjectMapper mapper) {
         super(bank, mapper);
     }
 
     @Override
-    public void execute(CommandInput input) {
+    public void execute(final CommandInput input) {
         bank.addAccount(input);
     }
 
-    public void updateOutput(CommandInput input, ObjectMapper mapper) {
+    public void updateOutput(final CommandInput input, final ObjectMapper mapper) {
 
     }
 }

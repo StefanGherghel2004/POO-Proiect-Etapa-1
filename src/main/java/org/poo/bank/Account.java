@@ -26,7 +26,7 @@ public class Account {
     private double minBalance = 0;
 
 
-    public Account(final String iban, final double balance, String currency, String type, double interestRate) {
+    public Account(final String iban, final double balance, final String currency, final String type, final double interestRate) {
         this.iban = iban;
         this.balance = balance;
         this.currency = currency;

@@ -20,7 +20,7 @@ public class User {
     private String firstName;
     private String lastName;
     private String email;
-    public List<Account> accounts = new ArrayList<>();
+    private List<Account> accounts = new ArrayList<>();
 
     public User(final String firstName, final String lastName, final String email) {
         this.firstName = firstName;

@@ -20,7 +20,6 @@ import java.nio.file.Paths;
 import java.util.*;
 
 import static org.poo.inputHandler.InputHandler.handler;
-import static org.poo.utils.Utils.generateIBAN;
 import static org.poo.utils.Utils.resetRandom;
 
 /**

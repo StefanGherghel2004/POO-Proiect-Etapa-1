@@ -15,7 +15,7 @@ import java.io.IOException;
 public abstract class Command {
     protected Bank bank;
     protected ObjectNode commandOutput;
-    public Command(Bank bank, ObjectMapper mapper) {
+    public Command(final Bank bank, final ObjectMapper mapper) {
         this.bank = new Bank(bank);
         this.commandOutput = mapper.createObjectNode();
     }

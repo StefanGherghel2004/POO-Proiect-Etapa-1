@@ -9,13 +9,13 @@ import org.poo.fileio.CommandInput;
 
 import java.util.Iterator;
 
-public class DeleteAccountCommand extends Command {
+public final class DeleteAccountCommand extends Command {
     private boolean couldnotDetlete = true;
-    public DeleteAccountCommand(Bank bank, ObjectMapper mapper) {
+    public DeleteAccountCommand(final Bank bank, final  ObjectMapper mapper) {
         super(bank, mapper);
     }
 
-    public void execute(CommandInput input) {
+    public void execute(final CommandInput input) {
         for (User user : bank.getUsers()) {
             for (int i = 0; i < user.getAccounts().size(); i++) {
                 Account account = user.getAccounts().get(i);
@@ -28,7 +28,7 @@ public class DeleteAccountCommand extends Command {
         }
     }
 
-    public void updateOutput(CommandInput input, ObjectMapper mapper) {
+    public void updateOutput(final CommandInput input, final ObjectMapper mapper) {
         commandOutput.put("command", "deleteAccount");
         ObjectNode output = mapper.createObjectNode();
         if (couldnotDetlete) {

@@ -16,7 +16,7 @@ public class CardTransaction extends Transaction {
     private double amount;
     private String commerciant;
 
-    public CardTransaction(String description, int timestamp, String account, String card, String cardholder, double amount, String commerciant) {
+    public CardTransaction(final String description, final int timestamp, final String account, final String card, final String cardholder, final double amount, final String commerciant) {
         super(description, timestamp);
         this.account = account;
         this.card = card;
@@ -25,7 +25,7 @@ public class CardTransaction extends Transaction {
         this.commerciant = commerciant;
     }
 
-    public ObjectNode toJSON(ObjectMapper mapper) {
+    public ObjectNode toJSON(final ObjectMapper mapper) {
         ObjectNode json = super.toJSON(mapper);
         if (successFulPayment) {
             json.put("amount", amount);

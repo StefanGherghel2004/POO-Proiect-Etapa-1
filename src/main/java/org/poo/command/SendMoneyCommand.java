@@ -7,13 +7,13 @@ import org.poo.fileio.CommandInput;
 import java.util.List;
 import java.util.Map;
 
-public class SendMoneyCommand extends Command {
+public final class SendMoneyCommand extends Command {
 
-    public SendMoneyCommand(Bank bank, ObjectMapper mapper) {
+    public SendMoneyCommand(final Bank bank, final ObjectMapper mapper) {
         super(bank,mapper);
     }
 
-    private static String findRealAccount(Map<String, List<String>> aliases, String alias) {
+    private static String findRealAccount(final Map<String, List<String>> aliases, final String alias) {
         // Iterate through the map
         for (Map.Entry<String, List<String>> entry : aliases.entrySet()) {
             String realAccount = entry.getKey();
@@ -27,7 +27,7 @@ public class SendMoneyCommand extends Command {
         return null; // No match found
     }
 
-    public void execute(CommandInput input) {
+    public void execute(final CommandInput input) {
         String senderIban = findRealAccount(bank.getAliases(), input.getAccount());
         if (senderIban != null) {
             return;
@@ -71,7 +71,7 @@ public class SendMoneyCommand extends Command {
         }
     }
 
-    public void updateOutput(CommandInput input, ObjectMapper mapper) {
+    public void updateOutput(final CommandInput input, final ObjectMapper mapper) {
 
     }
 }

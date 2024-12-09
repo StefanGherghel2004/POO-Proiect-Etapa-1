@@ -7,17 +7,17 @@ import org.poo.bank.Transaction;
 import org.poo.bank.User;
 import org.poo.fileio.CommandInput;
 
-public class PrintTransactionsCommand extends Command {
+public final class PrintTransactionsCommand extends Command {
 
-    public PrintTransactionsCommand(Bank bank, ObjectMapper mapper) {
+    public PrintTransactionsCommand(final Bank bank, final ObjectMapper mapper) {
         super(bank,mapper);
     }
 
-    public void execute(CommandInput input) {
+    public void execute(final CommandInput input) {
 
     }
 
-    public void updateOutput(CommandInput input, ObjectMapper mapper) {
+    public void updateOutput(final CommandInput input, final ObjectMapper mapper) {
         commandOutput.put("command", "printTransactions");
         ArrayNode output = mapper.createArrayNode();
         commandOutput.set("output", output);

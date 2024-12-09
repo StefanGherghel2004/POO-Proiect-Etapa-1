@@ -6,13 +6,13 @@ import org.poo.bank.Bank;
 import org.poo.bank.User;
 import org.poo.fileio.CommandInput;
 
-public class SetAliasCommand extends Command {
+public final class SetAliasCommand extends Command {
 
-    public SetAliasCommand(Bank bank, ObjectMapper mapper) {
+    public SetAliasCommand(final Bank bank, final ObjectMapper mapper) {
         super(bank,mapper);
     }
 
-    public void execute(CommandInput input) {
+    public void execute(final CommandInput input) {
         bank.addAlias(input.getAccount(), input.getAlias());
         for (User user : bank.getUsers()) {
             for (Account account : user.getAccounts()) {
@@ -25,7 +25,7 @@ public class SetAliasCommand extends Command {
 
     }
 
-    public void updateOutput(CommandInput input, ObjectMapper mapper) {
+    public void updateOutput(final CommandInput input, final ObjectMapper mapper) {
 
     }
 }

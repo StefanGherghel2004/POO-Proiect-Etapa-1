@@ -11,12 +11,12 @@ public class Transaction {
     private String description;
     private int timestamp;
 
-    public Transaction(String description, int timestamp) {
+    public Transaction(final String description, final int timestamp) {
         this.description = description;
         this.timestamp = timestamp;
     }
 
-    public ObjectNode toJSON(ObjectMapper mapper) {
+    public ObjectNode toJSON(final ObjectMapper mapper) {
         ObjectNode json = mapper.createObjectNode();
         json.put("description", description);
         json.put("timestamp", timestamp);

@@ -4,12 +4,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.poo.bank.*;
 import org.poo.fileio.CommandInput;
 
-import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SplitPaymentCommand extends Command {
+public final class SplitPaymentCommand extends Command {
 
     public SplitPaymentCommand(final Bank bank, final ObjectMapper mapper) {
         super(bank, mapper);
@@ -42,5 +40,7 @@ public class SplitPaymentCommand extends Command {
         }
     }
 
-    public void updateOutput(final CommandInput input, final ObjectMapper mapper) {}
+    public void updateOutput(final CommandInput input, final ObjectMapper mapper) {
+
+    }
 }

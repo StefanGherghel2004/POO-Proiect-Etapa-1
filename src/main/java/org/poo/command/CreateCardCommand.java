@@ -4,12 +4,12 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.poo.bank.*;
 import org.poo.fileio.CommandInput;
 
-public class CreateCardCommand extends Command {
-    public CreateCardCommand(Bank bank, ObjectMapper mapper) {
+public final class CreateCardCommand extends Command {
+    public CreateCardCommand(final Bank bank, final ObjectMapper mapper) {
         super(bank, mapper);
     }
 
-    public void execute(CommandInput input) {
+    public void execute(final CommandInput input) {
         for (User user : bank.getUsers()) {
             for (Account account : user.getAccounts()) {
                 if (account.getIban().equals(input.getAccount())) {
@@ -24,7 +24,7 @@ public class CreateCardCommand extends Command {
         }
     }
 
-    public void updateOutput(CommandInput input, ObjectMapper mapper) {
+    public void updateOutput(final CommandInput input, final ObjectMapper mapper) {
 
     }
 

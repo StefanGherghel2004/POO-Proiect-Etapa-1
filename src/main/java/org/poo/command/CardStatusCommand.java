@@ -5,14 +5,14 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.poo.bank.*;
 import org.poo.fileio.CommandInput;
 
-public class CardStatusCommand extends Command {
+public final class CardStatusCommand extends Command {
 
     private boolean notFound;
-    public CardStatusCommand(Bank bank, ObjectMapper mapper) {
+    public CardStatusCommand(final Bank bank, final ObjectMapper mapper) {
         super(bank, mapper);
     }
 
-    public void execute(CommandInput input) {
+    public void execute(final CommandInput input) {
         for (User user : bank.getUsers()) {
             for (Account account : user.getAccounts()) {
                 for (Card card : account.getCards()) {
@@ -29,7 +29,7 @@ public class CardStatusCommand extends Command {
         notFound = true;
     }
 
-    public void updateOutput(CommandInput input, ObjectMapper mapper) {
+    public void updateOutput(final CommandInput input, final ObjectMapper mapper) {
         if (notFound) {
             ObjectNode output = mapper.createObjectNode();
             output.put("description", "Card not found");

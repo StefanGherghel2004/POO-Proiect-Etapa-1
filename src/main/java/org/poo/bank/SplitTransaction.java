@@ -13,7 +13,7 @@ public class SplitTransaction extends Transaction {
     private List<String> accounts = new ArrayList<String>();
 
 
-    public SplitTransaction(String description, int timestamp, String currency, List<String> accounts, double amount) {
+    public SplitTransaction(final String description, final int timestamp, final String currency, final List<String> accounts, final double amount) {
         super(description, timestamp);
         this.currency = currency;
         this.amount = amount;
@@ -22,7 +22,7 @@ public class SplitTransaction extends Transaction {
         }
     }
 
-    public ObjectNode toJSON(ObjectMapper mapper) {
+    public ObjectNode toJSON(final ObjectMapper mapper) {
         ObjectNode json = super.toJSON(mapper);
         json.put("amount", amount);
         json.put("currency", currency);
