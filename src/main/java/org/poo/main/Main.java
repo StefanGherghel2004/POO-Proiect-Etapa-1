@@ -91,10 +91,13 @@ public final class Main {
         Command myCommand;
         for (CommandInput command : inputData.getCommands()) {
             myCommand = handler(command, bank, mapper);
-            myCommand.execute(command);
-            myCommand.updateOutput(command, mapper);
+            if (myCommand != null) {
+                myCommand.execute(command);
+                myCommand.updateOutput(command, mapper);
+
             if (!myCommand.getCommandOutput().isEmpty()) {
                 output.add(myCommand.getCommandOutput());
+            }
             }
         }
         resetRandom();

@@ -13,24 +13,28 @@ import java.util.List;
 @Getter
 @Setter
 public class Account {
+    private List<Transaction> transactions = new ArrayList<>();
+    private List<String> aliases = new ArrayList<>();
     private String iban;
     private double balance;
     private String currency;
     private String type;
     private List<Card> cards = new ArrayList<Card>();
+    private double interestRate;
 
     private boolean setMinBalance;
-    private double minBalance;
+    private double minBalance = 0;
 
 
-    public Account(String iban, double balance, String currency, String type) {
+    public Account(final String iban, final double balance, String currency, String type, double interestRate) {
         this.iban = iban;
         this.balance = balance;
         this.currency = currency;
         this.type = type;
+        this.interestRate = interestRate;
     }
 
-    public ObjectNode toJSON(ObjectMapper mapper) {
+    public ObjectNode toJSON(final ObjectMapper mapper) {
         ObjectNode json = mapper.createObjectNode();
         json.put("IBAN", iban);
         json.put("balance", balance);
@@ -44,11 +48,19 @@ public class Account {
         return json;
     }
 
-    public void addCard(Card card) {
+    public void addCard(final Card card) {
         cards.add(card);
     }
 
-    public void addFunds(double amount) {
+    public void addFunds(final double amount) {
         balance += amount;
+    }
+
+    public void addAlias(final String alias) {
+        aliases.add(alias);
+    }
+
+    public void addTransaction(final Transaction transaction) {
+        transactions.add(transaction);
     }
 }

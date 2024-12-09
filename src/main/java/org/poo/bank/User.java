@@ -16,29 +16,30 @@ import static org.poo.utils.Utils.generateIBAN;
 @Getter
 @Setter
 public class User {
+    private List<Transaction> transactions = new ArrayList<>();
     private String firstName;
     private String lastName;
     private String email;
     public List<Account> accounts = new ArrayList<>();
 
-    public User(String firstName, String lastName, String email) {
+    public User(final String firstName, final String lastName, final String email) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
     }
 
-    public User(UserInput user) {
+    public User(final UserInput user) {
         firstName = user.getFirstName();
         lastName = user.getLastName();
         email = user.getEmail();
     }
 
-    public void addAccount(CommandInput input) {
-        Account account = new Account(generateIBAN(), 0, input.getCurrency(), input.getAccountType());
+    public void addAccount(final CommandInput input) {
+        Account account = new Account(generateIBAN(), 0, input.getCurrency(), input.getAccountType(), input.getInterestRate());
         accounts.add(account);
     }
 
-    public ObjectNode toJSON(ObjectMapper mapper) {
+    public ObjectNode toJSON(final ObjectMapper mapper) {
         ObjectNode json = mapper.createObjectNode();
         json.put("firstName", firstName);
         json.put("lastName", lastName);
@@ -50,4 +51,9 @@ public class User {
         json.set("accounts", accountsArray);
         return json;
     }
+
+    public void addTransaction(final Transaction transaction) {
+        transactions.add(transaction);
+    }
+
 }

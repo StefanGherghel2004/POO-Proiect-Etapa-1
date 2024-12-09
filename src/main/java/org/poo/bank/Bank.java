@@ -11,11 +11,14 @@ import java.util.*;
 @Getter
 @Setter
 public class Bank {
+
+    private Map<String, List<String>> aliases = new HashMap<>();
+
     private List<User> users = new ArrayList<User>();
 
     private Map<String, Double> exchangeRates = new HashMap<>();
 
-    public void addRate(String from, String to, double rate) {
+    public void addRate(final String from, final String to, final double rate) {
         exchangeRates.put(from + "->" + to, rate);
         exchangeRates.put(to + "->" + from, 1 / rate);
     }
@@ -39,6 +42,7 @@ public class Bank {
     public Bank(final Bank bank) {
         users = bank.getUsers();
         exchangeRates = bank.getExchangeRates();
+        aliases = bank.getAliases();
     }
 
     public void addUser(final UserInput user) {
@@ -57,6 +61,8 @@ public class Bank {
         for (User user : users) {
             if (user.getEmail().equals(input.getEmail())) {
                 user.addAccount(input);
+                user.addTransaction(new Transaction("New account created", input.getTimestamp()));
+                user.getAccounts().getLast().addTransaction(new Transaction("New account created", input.getTimestamp()));
             }
         }
     }
@@ -98,5 +104,10 @@ public class Bank {
         }
         return this;
     }
+
+    public void addAlias(final String key, final String value) {
+        aliases.computeIfAbsent(key, k -> new ArrayList<>()).add(value);
+    }
+
 }
 

@@ -3,6 +3,7 @@ package org.poo.command;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.poo.bank.Account;
 import org.poo.bank.Bank;
+import org.poo.bank.Card;
 import org.poo.bank.User;
 import org.poo.fileio.CommandInput;
 
@@ -18,6 +19,13 @@ public class SetMinimumBalanceCommand extends Command {
                 if (account.getIban().equals(input.getAccount())) {
                     account.setMinBalance(input.getAmount());
                     account.setSetMinBalance(true);
+                    System.out.println(account.getMinBalance());
+                    System.out.println(account.getBalance());
+                    if (account.getBalance() <= account.getMinBalance()) {
+                        for (Card card: account.getCards()) {
+                            card.setStatus("frozen");
+                        }
+                    }
                 }
             }
         }

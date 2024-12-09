@@ -18,10 +18,15 @@ public class Card {
         status = "active";
     }
 
-    public ObjectNode toJSON(ObjectMapper mapper) {
+    public ObjectNode toJSON(final ObjectMapper mapper) {
         ObjectNode json = mapper.createObjectNode();
         json.put("cardNumber", cardNumber);
         json.put("status", status);
         return json;
     }
+
+    public boolean isFrozen() {
+        return status.equals("frozen");
+    }
+
 }

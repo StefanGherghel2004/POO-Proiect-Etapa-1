@@ -1,10 +1,7 @@
 package org.poo.command;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.poo.bank.Account;
-import org.poo.bank.Bank;
-import org.poo.bank.Card;
-import org.poo.bank.User;
+import org.poo.bank.*;
 import org.poo.fileio.CommandInput;
 
 public class DeleteCardCommand extends Command {
@@ -13,13 +10,16 @@ public class DeleteCardCommand extends Command {
         super (bank, mapper);
     }
 
-    public void execute(CommandInput Input) {
+    public void execute(CommandInput input) {
         for (User user: bank.getUsers()) {
-            if (user.getEmail().equals(Input.getEmail())) {
+            if (user.getEmail().equals(input.getEmail())) {
                 for (Account account: user.getAccounts()) {
                     for (int i = 0; i < account.getCards().size(); i++) {
                         Card card = account.getCards().get(i);
-                        if (card.getCardNumber().equals(Input.getCardNumber())) {
+                        if (card.getCardNumber().equals(input.getCardNumber())) {
+                            CardTransaction transaction = new CardTransaction("The card has been destroyed", input.getTimestamp(), account.getIban(), card.getCardNumber(), user.getEmail(), input.getAmount(), input.getCommerciant());
+                            transaction.setCardCreation(true);
+                            user.addTransaction(transaction);
                             account.getCards().remove(card);
                             return;
                         }
