@@ -28,7 +28,17 @@ public final class SplitPaymentCommand extends Command {
             }
         }
 
+
+
         if (splitingAccounts.size() == input.getAccounts().size()) {
+
+            for (int i = 0; i < splitingAccounts.size(); i++) {
+                Account account = splitingAccounts.get(i);
+                double rate = bank.getRate(account.getCurrency(), input.getCurrency());
+                if (account.getBalance() < (1 / rate) * realAmount) {
+
+                }
+            }
             for (int i = 0; i < splitingAccounts.size(); i++) {
                 Account account = splitingAccounts.get(i);
                 double rate = bank.getRate(account.getCurrency(), input.getCurrency());

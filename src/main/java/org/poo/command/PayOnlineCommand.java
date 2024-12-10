@@ -5,6 +5,8 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.poo.bank.*;
 import org.poo.fileio.CommandInput;
 
+import static org.poo.utils.Utils.generateCardNumber;
+
 public final class PayOnlineCommand extends Command {
 
     public boolean cardNotFound;
@@ -48,9 +50,48 @@ public final class PayOnlineCommand extends Command {
                                 convertedAmount, // convertedAmount could be reused here
                                 input.getCommerciant()
                         );
+                        System.out.println(input.getCommerciant());
+                        //if (!account.getCommerciants().stream()
+                        //        .anyMatch(commerciant -> commerciant.getName().equals(input.getCommerciant()))) {
+                        //    account.addCommerciant(input.getCommerciant());
+
+                        //}
+                        //account.increaseCommerciantMoney(input.getCommerciant(), convertedAmount);
+
+
                         transaction.setSuccessFulPayment(true);
                         user.addTransaction(transaction);
                         account.addTransaction(transaction);
+
+                        if (card.isOneTime()) {
+                            CardTransaction transactionDestroyed = new CardTransaction(
+                                    "The card has been destroyed",
+                                    input.getTimestamp(),
+                                    account.getIban(),
+                                    card.getCardNumber(),
+                                    user.getEmail(),
+                                    convertedAmount, // convertedAmount could be reused here
+                                    input.getCommerciant()
+                            );
+
+                            card.setCardNumber(generateCardNumber());
+
+                            CardTransaction transactionCreate = new CardTransaction(
+                                    "New card created",
+                                    input.getTimestamp(),
+                                    account.getIban(),
+                                    card.getCardNumber(),
+                                    user.getEmail(),
+                                    convertedAmount, // convertedAmount could be reused here
+                                    input.getCommerciant()
+                            );
+
+                            transactionDestroyed.setCardCreation(true);
+                            transactionCreate.setCardCreation(true);
+
+                            user.addTransaction(transactionDestroyed);
+                            user.addTransaction(transactionCreate);
+                        }
                         return;
                     }
                 }

@@ -5,7 +5,6 @@ import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import lombok.Getter;
 import lombok.Setter;
-import org.poo.fileio.CommandInput;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,6 +12,7 @@ import java.util.List;
 @Getter
 @Setter
 public class Account {
+    private List<Commerciant> commerciants = new ArrayList<>();
     private List<Transaction> transactions = new ArrayList<>();
     private List<String> aliases = new ArrayList<>();
     private String iban;
@@ -62,5 +62,16 @@ public class Account {
 
     public void addTransaction(final Transaction transaction) {
         transactions.add(transaction);
+    }
+
+    public void addCommerciant(final String name) {
+        commerciants.add(new Commerciant(name));
+    }
+
+    public void increaseCommerciantMoney(final String name, double amount) {
+        commerciants.stream()
+                .filter(commerciant -> commerciant.getName().equals(name)) // Find the commerciant with the given name
+                .findFirst() // Get the first match
+                .ifPresent(commerciant -> commerciant.setStolenMoney(commerciant.getStolenMoney() + amount)); // Increase stolenMoney
     }
 }

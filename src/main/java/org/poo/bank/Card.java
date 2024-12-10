@@ -12,6 +12,7 @@ import static org.poo.utils.Utils.generateCardNumber;
 public class Card {
     private String cardNumber;
     private String status;
+    private boolean oneTime;
 
     public Card() {
         cardNumber = generateCardNumber();

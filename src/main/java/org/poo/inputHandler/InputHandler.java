@@ -19,7 +19,9 @@ public class InputHandler {
         } else if (command.getCommand().equals("deleteAccount")) {
             return new DeleteAccountCommand(bank, mapper);
         } else if (command.getCommand().equals("createOneTimeCard")) {
-            return new CreateCardCommand(bank, mapper);
+            CreateCardCommand myCommand = new CreateCardCommand(bank, mapper);
+            myCommand.setOneTime(true);
+            return myCommand;
         } else if (command.getCommand().equals("deleteCard")) {
             return new DeleteCardCommand(bank, mapper);
         } else if (command.getCommand().equals("setMinimumBalance")) {
@@ -40,6 +42,8 @@ public class InputHandler {
             return new SplitPaymentCommand(bank, mapper);
         } else if (command.getCommand().equals("report")) {
             return new ReportCommand(bank, mapper);
+        } else if (command.getCommand().equals("spendingsReport")) {
+            return new SpendingsReportCommand(bank,mapper);
         } else {
             return null;
         }

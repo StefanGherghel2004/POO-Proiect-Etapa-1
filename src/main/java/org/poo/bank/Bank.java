@@ -39,6 +39,7 @@ public class Bank {
     public Bank() {
 
     }
+
     public Bank(final Bank bank) {
         users = bank.getUsers();
         exchangeRates = bank.getExchangeRates();
@@ -107,6 +108,16 @@ public class Bank {
 
     public void addAlias(final String key, final String value) {
         aliases.computeIfAbsent(key, k -> new ArrayList<>()).add(value);
+    }
+
+    public void addFunds(CommandInput input) {
+        for (User user : users) {
+            for (Account account : user.getAccounts()) {
+                if (account.getIban().equals(input.getAccount())) {
+                    account.addFunds(input.getAmount());
+                }
+            }
+        }
     }
 
 }

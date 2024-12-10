@@ -15,7 +15,7 @@ public final class SetMinimumBalanceCommand extends Command {
 
     public void execute(final CommandInput input) {
         for (User user: bank.getUsers()) {
-            for (Account account : user.getAccounts() ) {
+            for (Account account : user.getAccounts()) {
                 if (account.getIban().equals(input.getAccount())) {
                     account.setMinBalance(input.getAmount());
                     account.setSetMinBalance(true);
