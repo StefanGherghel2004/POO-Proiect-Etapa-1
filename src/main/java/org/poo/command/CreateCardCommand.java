@@ -20,6 +20,10 @@ public final class CreateCardCommand extends Command {
         for (User user : bank.getUsers()) {
             for (Account account : user.getAccounts()) {
                 if (account.getIban().equals(input.getAccount())) {
+
+                    if (!user.getEmail().equals(input.getEmail())) {
+                        return;
+                    }
                     Card card = new Card();
                     if (oneTime) {
                         System.out.println("ACOLOOOOOOOOO");

@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.poo.bank.Account;
 import org.poo.bank.Bank;
+import org.poo.bank.Transaction;
 import org.poo.bank.User;
 import org.poo.fileio.CommandInput;
 
@@ -19,9 +20,14 @@ public final class DeleteAccountCommand extends Command {
         for (User user : bank.getUsers()) {
             for (int i = 0; i < user.getAccounts().size(); i++) {
                 Account account = user.getAccounts().get(i);
-                if (account.getIban().equals(input.getAccount()) && account.getBalance() == 0) {
-                    user.getAccounts().remove(i);
-                    couldnotDetlete = false;
+                if (account.getIban().equals(input.getAccount())) {
+                    if (account.getBalance() == 0) {
+                        user.getAccounts().remove(i);
+                        couldnotDetlete = false;
+                    } else {
+                        Transaction transaction = new Transaction("Account couldn't be deleted - there are funds remaining", input.getTimestamp());
+                        user.addTransaction(transaction);
+                    }
                     return;
                 }
             }

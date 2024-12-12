@@ -17,6 +17,7 @@ public final class DeleteCardCommand extends Command {
                     for (int i = 0; i < account.getCards().size(); i++) {
                         Card card = account.getCards().get(i);
                         if (card.getCardNumber().equals(input.getCardNumber())) {
+
                             CardTransaction transaction = new CardTransaction("The card has been destroyed", input.getTimestamp(), account.getIban(), card.getCardNumber(), user.getEmail(), input.getAmount(), input.getCommerciant());
                             transaction.setCardCreation(true);
                             user.addTransaction(transaction);

@@ -5,7 +5,9 @@ import org.poo.bank.*;
 import org.poo.fileio.CommandInput;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 
 public final class SplitPaymentCommand extends Command {
 
@@ -28,24 +30,36 @@ public final class SplitPaymentCommand extends Command {
             }
         }
 
-
+        // sorting the list of account to be in the same order as given in input
+        splitingAccounts.sort(Comparator.comparingInt(account -> input.getAccounts().indexOf(account.getIban())));
 
         if (splitingAccounts.size() == input.getAccounts().size()) {
 
-            for (int i = 0; i < splitingAccounts.size(); i++) {
+            String lastInsufficientIBAN = null;
+            for (int i = splitingAccounts.size() - 1; i >= 0; i--) {
                 Account account = splitingAccounts.get(i);
                 double rate = bank.getRate(account.getCurrency(), input.getCurrency());
                 if (account.getBalance() < (1 / rate) * realAmount) {
-
+                    // Store the IBAN of the current insufficient account and break
+                    lastInsufficientIBAN = account.getIban();
+                    break;
                 }
             }
+
             for (int i = 0; i < splitingAccounts.size(); i++) {
                 Account account = splitingAccounts.get(i);
-                double rate = bank.getRate(account.getCurrency(), input.getCurrency());
-                account.setBalance(account.getBalance() - (1 / rate) * realAmount);
+                if (lastInsufficientIBAN == null) {
+                    double rate = bank.getRate(account.getCurrency(), input.getCurrency());
+                    account.setBalance(account.getBalance() - (1 / rate) * realAmount);
+                }
                 String value = String.format("%.2f", input.getAmount());
-                Transaction transaction = new SplitTransaction("Split payment of " + value + " " + input.getCurrency(), input.getTimestamp(), input.getCurrency(), input.getAccounts(), realAmount);
+                SplitTransaction transaction = new SplitTransaction("Split payment of " + value + " " + input.getCurrency(), input.getTimestamp(), input.getCurrency(), input.getAccounts(), realAmount, "");
+                if (lastInsufficientIBAN != null) {
+                    transaction.setError(true);
+                    transaction.setErrorDescription("Account " + lastInsufficientIBAN + " has insufficient funds for a split payment.");
+                }
                 splitingUsers.get(i).addTransaction(transaction);
+                splitingAccounts.get(i).addTransaction(transaction);
             }
         }
     }

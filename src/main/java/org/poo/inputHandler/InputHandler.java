@@ -37,13 +37,15 @@ public class InputHandler {
         } else if (command.getCommand().equals("checkCardStatus")) {
             return new CardStatusCommand(bank, mapper);
         } else  if (command.getCommand().equals("changeInterestRate")) {
-            return new ChangeInterestCommand(bank, mapper);
+            return new InterestCommand(bank, mapper);
         } else if (command.getCommand().equals("splitPayment")) {
             return new SplitPaymentCommand(bank, mapper);
         } else if (command.getCommand().equals("report")) {
             return new ReportCommand(bank, mapper);
         } else if (command.getCommand().equals("spendingsReport")) {
             return new SpendingsReportCommand(bank,mapper);
+        } else if (command.getCommand().equals("addInterest")) {
+            return new InterestCommand(bank, mapper);
         } else {
             return null;
         }

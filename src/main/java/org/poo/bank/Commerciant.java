@@ -18,8 +18,10 @@ public class Commerciant {
 
     public ObjectNode toJSON(ObjectMapper mapper) {
         ObjectNode json = mapper.createObjectNode();
+        double value = stolenMoney;
+        double roundedValue = value * 100000.0 / 100000.0;
         json.put("commerciant", name);
-        json.put("total", stolenMoney);
+        json.put("total", roundedValue);
         return json;
     }
 }

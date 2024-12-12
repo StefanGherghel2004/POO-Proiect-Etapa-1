@@ -27,8 +27,10 @@ public class CardTransaction extends Transaction {
 
     public ObjectNode toJSON(final ObjectMapper mapper) {
         ObjectNode json = super.toJSON(mapper);
+        double rounded = amount;
+        double roundedValue = Math.round(rounded * 10000.0) / 10000.0;
         if (successFulPayment) {
-            json.put("amount", amount);
+            json.put("amount", roundedValue);
             json.put("commerciant", commerciant);
         } else if(cardCreation) {
             json.put("account", account);

@@ -63,10 +63,13 @@ public final class SendMoneyCommand extends Command {
             if (sender.getBalance() >= input.getAmount()) {
                 senderUser.addTransaction(new TransferTransaction(input.getDescription(), input.getTimestamp(), receiver.getIban(), sender.getIban(), "sent", input.getAmount() + " " +  sender.getCurrency()));
                 sender.addTransaction(new TransferTransaction(input.getDescription(), input.getTimestamp(), receiver.getIban(), sender.getIban(), "sent", input.getAmount() + " " +  sender.getCurrency()));;
+                receiverUser.addTransaction(new TransferTransaction(input.getDescription(), input.getTimestamp(), receiver.getIban(), sender.getIban(), "received", input.getAmount() * rate + " " +  receiver.getCurrency()));
+                receiver.addTransaction(new TransferTransaction(input.getDescription(), input.getTimestamp(), receiver.getIban(), sender.getIban(), "received", input.getAmount() * rate + " " +  receiver.getCurrency()));;
                 sender.setBalance(sender.getBalance() - input.getAmount());
                 receiver.setBalance(receiver.getBalance() + rate * input.getAmount());
             } else {
                 senderUser.addTransaction(new Transaction("Insufficient funds", input.getTimestamp()));
+                sender.addTransaction(new Transaction("Insufficient funds", input.getTimestamp()));
             }
         }
     }
