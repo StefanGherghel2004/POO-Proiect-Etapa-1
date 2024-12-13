@@ -3,6 +3,8 @@ package org.poo.command;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.poo.bank.*;
+import org.poo.bank.transactions.CardTransaction;
+import org.poo.bank.transactions.Transaction;
 import org.poo.fileio.CommandInput;
 
 import static org.poo.utils.Utils.generateCardNumber;
@@ -50,14 +52,6 @@ public final class PayOnlineCommand extends Command {
                                 convertedAmount, // convertedAmount could be reused here
                                 input.getCommerciant()
                         );
-                        System.out.println(input.getCommerciant());
-                        //if (!account.getCommerciants().stream()
-                        //        .anyMatch(commerciant -> commerciant.getName().equals(input.getCommerciant()))) {
-                        //    account.addCommerciant(input.getCommerciant());
-
-                        //}
-                        //account.increaseCommerciantMoney(input.getCommerciant(), convertedAmount);
-
 
                         transaction.setSuccessFulPayment(true);
                         user.addTransaction(transaction);

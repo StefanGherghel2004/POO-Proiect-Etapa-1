@@ -7,6 +7,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import lombok.Getter;
 import lombok.Setter;
 import org.poo.bank.*;
+import org.poo.bank.transactions.Transaction;
 import org.poo.fileio.CommandInput;
 
 import java.util.ArrayList;
@@ -22,7 +23,7 @@ public final  class ReportCommand extends Command{
         commerciantsList.add(new Commerciant(name));
     }
 
-    public void increaseCommerciantMoney(final String name, double amount) {
+    public void increaseCommerciantMoney(final String name, final double amount) {
         commerciantsList.stream()
                 .filter(commerciant -> commerciant.getName().equals(name)) // Find the commerciant with the given name
                 .findFirst() // Get the first match
@@ -88,8 +89,8 @@ public final  class ReportCommand extends Command{
                         String commerciantName = transactionObject.has("commerciant") ?
                                 transactionObject.get("commerciant").asText() : null;
 
-                        if (commerciantName != null &&
-                                !getCommerciantsList().stream()
+                        if (commerciantName != null
+                                && !getCommerciantsList().stream()
                                         .anyMatch(commerciant -> commerciant.getName().equals(commerciantName))) {
                             addCommerciant(commerciantName);
                         }

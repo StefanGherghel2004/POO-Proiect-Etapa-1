@@ -3,11 +3,8 @@ package org.poo.main;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import com.fasterxml.jackson.databind.node.ArrayNode;
-import org.poo.bank.Bank;
 import org.poo.checker.Checker;
 import org.poo.checker.CheckerConstants;
-import org.poo.command.Command;
-import org.poo.fileio.CommandInput;
 import org.poo.fileio.ObjectInput;
 
 import java.io.File;
@@ -17,8 +14,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
 
-import static org.poo.inputHandler.InputHandler.handler;
-import static org.poo.utils.Utils.resetRandom;
+import static org.poo.inputHandler.InputHandler.bankHandler;
 
 /**
  * The entry point to this homework. It runs the checker that tests your implementation.
@@ -77,27 +73,10 @@ public final class Main {
         ObjectInput inputData = objectMapper.readValue(file, ObjectInput.class);
 
         ArrayNode output = objectMapper.createArrayNode();
-        ObjectMapper mapper = new ObjectMapper();
-        Bank bank = new Bank();
-        // initialise users
-            bank.addUsers(inputData.getUsers())
-                    .addExchangeRates(inputData.getExchangeRates())
-                    .addSecondaryExchangeRates();
 
-        System.out.println("TEST");
-        Command myCommand;
-        for (CommandInput command : inputData.getCommands()) {
-            myCommand = handler(command, bank, mapper);
-            if (myCommand != null) {
-                myCommand.execute(command);
-                myCommand.updateOutput(command, mapper);
+        bankHandler(inputData, output);
 
-            if (!myCommand.getCommandOutput().isEmpty()) {
-                output.add(myCommand.getCommandOutput());
-            }
-            }
-        }
-        resetRandom();
+
         ObjectWriter objectWriter = objectMapper.writerWithDefaultPrettyPrinter();
         objectWriter.writeValue(new File(filePath2), output);
     }

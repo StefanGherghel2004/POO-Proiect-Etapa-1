@@ -1,4 +1,4 @@
-package org.poo.bank;
+package org.poo.bank.transactions;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
@@ -9,7 +9,8 @@ public class TransferTransaction extends Transaction {
     private String senderIBAN;
     private String transferType;
 
-    public TransferTransaction(final String description, final int timestamp, final String receiverIBAN, String senderIBAN, String transferType, String amount) {
+    public TransferTransaction(final String description, final int timestamp, final String receiverIBAN,
+                               final String senderIBAN, final String transferType, final String amount) {
         super(description, timestamp);
         this.receiverIBAN = receiverIBAN;
         this.senderIBAN = senderIBAN;

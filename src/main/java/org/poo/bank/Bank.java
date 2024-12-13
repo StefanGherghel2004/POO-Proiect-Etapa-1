@@ -2,6 +2,7 @@ package org.poo.bank;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.poo.bank.transactions.Transaction;
 import org.poo.fileio.CommandInput;
 import org.poo.fileio.ExchangeInput;
 import org.poo.fileio.UserInput;
@@ -98,7 +99,7 @@ public class Bank {
                         double newRate = rates.get(from + "->" + intermediate) *
                                 rates.get(intermediate + "->" + to);
                         rates.put(from + "->" + to, newRate);
-                        rates.put(to + "->" + from, 1 / newRate); // Add reverse
+                        rates.put(to + "->" + from, 1 / newRate);
                     }
                 }
             }
@@ -110,7 +111,7 @@ public class Bank {
         aliases.computeIfAbsent(key, k -> new ArrayList<>()).add(value);
     }
 
-    public void addFunds(CommandInput input) {
+    public void addFunds(final CommandInput input) {
         for (User user : users) {
             for (Account account : user.getAccounts()) {
                 if (account.getIban().equals(input.getAccount())) {
@@ -119,6 +120,29 @@ public class Bank {
             }
         }
     }
+
+    public User findUser(final String email) {
+        for (User user : users) {
+            if (user.getEmail().equals(email)) {
+                return user;
+            }
+        }
+        return null;
+    }
+
+    public Account findAccount(final String iban) {
+        for (User user : users) {
+            for (Account account : user.getAccounts()) {
+                if (account.getIban().equals(iban)) {
+                    return account;
+                }
+            }
+        }
+        return null;
+    }
+
+
+
 
 }
 

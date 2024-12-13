@@ -1,54 +1,93 @@
 package org.poo.inputHandler;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ArrayNode;
 import org.poo.bank.Bank;
 import org.poo.command.*;
 import org.poo.fileio.CommandInput;
+import org.poo.fileio.ObjectInput;
+
+import static org.poo.utils.Utils.resetRandom;
 
 public class InputHandler {
 
     public static Command handler(final CommandInput command, final Bank bank, final ObjectMapper mapper) {
-        if (command.getCommand().equals("printUsers")) {
-            return new PrintUsersCommand(bank, mapper);
-        } else if (command.getCommand().equals("addAccount")) {
-            return new AddAccountCommand(bank, mapper);
-        } else if (command.getCommand().equals("createCard")) {
-            return new CreateCardCommand(bank, mapper);
-        } else if (command.getCommand().equals("addFunds")) {
-            return new AddFundsCommand(bank, mapper);
-        } else if (command.getCommand().equals("deleteAccount")) {
-            return new DeleteAccountCommand(bank, mapper);
-        } else if (command.getCommand().equals("createOneTimeCard")) {
-            CreateCardCommand myCommand = new CreateCardCommand(bank, mapper);
-            myCommand.setOneTime(true);
-            return myCommand;
-        } else if (command.getCommand().equals("deleteCard")) {
-            return new DeleteCardCommand(bank, mapper);
-        } else if (command.getCommand().equals("setMinimumBalance")) {
-            return new SetMinimumBalanceCommand(bank, mapper);
-        } else if (command.getCommand().equals("payOnline")) {
-            return new PayOnlineCommand(bank, mapper);
-        } else if (command.getCommand().equals("sendMoney")) {
-            return new SendMoneyCommand(bank, mapper);
-        } else if (command.getCommand().equals("setAlias")) {
-            return new SetAliasCommand(bank, mapper);
-        } else if (command.getCommand().equals("printTransactions")) {
-            return new PrintTransactionsCommand(bank, mapper);
-        } else if (command.getCommand().equals("checkCardStatus")) {
-            return new CardStatusCommand(bank, mapper);
-        } else  if (command.getCommand().equals("changeInterestRate")) {
-            return new InterestCommand(bank, mapper);
-        } else if (command.getCommand().equals("splitPayment")) {
-            return new SplitPaymentCommand(bank, mapper);
-        } else if (command.getCommand().equals("report")) {
-            return new ReportCommand(bank, mapper);
-        } else if (command.getCommand().equals("spendingsReport")) {
-            return new SpendingsReportCommand(bank,mapper);
-        } else if (command.getCommand().equals("addInterest")) {
-            return new InterestCommand(bank, mapper);
-        } else {
-            return null;
+        switch (command.getCommand()) {
+            case "printUsers" -> {
+                return new PrintUsersCommand(bank, mapper);
+            }
+            case "addAccount" -> {
+                return new AddAccountCommand(bank, mapper);
+            }
+            case "createCard", "createOneTimeCard" -> {
+                return new CreateCardCommand(bank, mapper);
+            }
+            case "addFunds" -> {
+                return new AddFundsCommand(bank, mapper);
+            }
+            case "deleteAccount" -> {
+                return new DeleteAccountCommand(bank, mapper);
+            }
+            case "deleteCard" -> {
+                return new DeleteCardCommand(bank, mapper);
+            }
+            case "setMinimumBalance" -> {
+                return new SetMinimumBalanceCommand(bank, mapper);
+            }
+            case "payOnline" -> {
+                return new PayOnlineCommand(bank, mapper);
+            }
+            case "sendMoney" -> {
+                return new SendMoneyCommand(bank, mapper);
+            }
+            case "setAlias" -> {
+                return new SetAliasCommand(bank, mapper);
+            }
+            case "printTransactions" -> {
+                return new PrintTransactionsCommand(bank, mapper);
+            }
+            case "checkCardStatus" -> {
+                return new CardStatusCommand(bank, mapper);
+            }
+            case "changeInterestRate", "addInterest" -> {
+                return new InterestCommand(bank, mapper);
+            }
+            case "splitPayment" -> {
+                return new SplitPaymentCommand(bank, mapper);
+            }
+            case "report" -> {
+                return new ReportCommand(bank, mapper);
+            }
+            case "spendingsReport" -> {
+                return new SpendingsReportCommand(bank, mapper);
+            }
+            default -> {
+                return null;
+            }
         }
 
+    }
+
+    public static void bankHandler(final ObjectInput input, final ArrayNode output) {
+        ObjectMapper mapper = new ObjectMapper();
+        Bank bank = new Bank()
+                .addUsers(input.getUsers())
+                .addExchangeRates(input.getExchangeRates())
+                .addSecondaryExchangeRates();
+
+        for (CommandInput command : input.getCommands()) {
+            Command myCommand = handler(command, bank, mapper);
+            if (myCommand != null) {
+
+                myCommand.execute(command);
+                myCommand.updateOutput(command, mapper);
+
+                if (!myCommand.getCommandOutput().isEmpty()) {
+                    output.add(myCommand.getCommandOutput());
+                }
+            }
+        }
+
+        resetRandom();
     }
 }

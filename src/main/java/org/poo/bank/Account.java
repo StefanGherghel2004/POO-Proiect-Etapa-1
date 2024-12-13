@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import lombok.Getter;
 import lombok.Setter;
+import org.poo.bank.transactions.Transaction;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -64,14 +65,19 @@ public class Account {
         transactions.add(transaction);
     }
 
-    public void addCommerciant(final String name) {
-        commerciants.add(new Commerciant(name));
+    public Card findCard(final String cardNumber) {
+        for (Card card : cards) {
+            if (card.getCardNumber().equals(cardNumber)) {
+                return card;
+            }
+        }
+        return null;
     }
 
-    public void increaseCommerciantMoney(final String name, double amount) {
-        commerciants.stream()
-                .filter(commerciant -> commerciant.getName().equals(name)) // Find the commerciant with the given name
-                .findFirst() // Get the first match
-                .ifPresent(commerciant -> commerciant.setStolenMoney(commerciant.getStolenMoney() + amount)); // Increase stolenMoney
+    public void frozeCards() {
+        for (Card card : cards) {
+            card.setStatus("frozen");
+        }
     }
+
 }

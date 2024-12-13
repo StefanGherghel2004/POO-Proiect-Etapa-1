@@ -2,6 +2,8 @@ package org.poo.command;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.poo.bank.*;
+import org.poo.bank.transactions.Transaction;
+import org.poo.bank.transactions.TransferTransaction;
 import org.poo.fileio.CommandInput;
 
 import java.util.List;
@@ -33,7 +35,6 @@ public final class SendMoneyCommand extends Command {
             return;
         }
         String receiverIban = findRealAccount(bank.getAliases(), input.getReceiver());
-        System.out.println("");
         Account sender = null;
         Account receiver = null;
         User senderUser = null;
@@ -51,15 +52,12 @@ public final class SendMoneyCommand extends Command {
             }
         }
         if (senderUser != null && !input.getEmail().equals(senderUser.getEmail())) {
-            //System.out.println("ACOLOOOOOOOOOOOOOOOOOOO");
             return;
         }
 
         if (sender != null && receiver != null) {
             double rate = bank.getRate(sender.getCurrency(), receiver.getCurrency());
-            //System.out.println(rate);
-            //System.out.println(sender.getBalance());
-            //System.out.println(receiver.getBalance());
+
             if (sender.getBalance() >= input.getAmount()) {
                 senderUser.addTransaction(new TransferTransaction(input.getDescription(), input.getTimestamp(), receiver.getIban(), sender.getIban(), "sent", input.getAmount() + " " +  sender.getCurrency()));
                 sender.addTransaction(new TransferTransaction(input.getDescription(), input.getTimestamp(), receiver.getIban(), sender.getIban(), "sent", input.getAmount() + " " +  sender.getCurrency()));;

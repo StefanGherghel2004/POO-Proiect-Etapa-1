@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import lombok.Getter;
 import lombok.Setter;
+import org.poo.bank.transactions.Transaction;
 import org.poo.fileio.CommandInput;
 import org.poo.fileio.UserInput;
 
@@ -54,6 +55,17 @@ public class User {
 
     public void addTransaction(final Transaction transaction) {
         transactions.add(transaction);
+    }
+
+    public Account findAccountHasCard(final String cardNumber) {
+        for (Account account : accounts) {
+            for (Card card : account.getCards()) {
+                if (card.getCardNumber().equals(cardNumber)) {
+                    return account;
+                }
+            }
+        }
+        return null;
     }
 
 }

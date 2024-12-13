@@ -18,13 +18,13 @@ public final class PrintUsersCommand extends Command {
     }
 
     public void updateOutput(final CommandInput input, final ObjectMapper mapper) {
-        commandOutput.put("command","printUsers");
+        commandOutput.put("command", "printUsers");
         ArrayNode users = mapper.createArrayNode();
         for (User user : bank.getUsers()) {
             ObjectNode userNode = user.toJSON(mapper);
             users.add(userNode);
         }
-        commandOutput.set("output",users);
+        commandOutput.set("output", users);
         commandOutput.put("timestamp", input.getTimestamp());
     }
 }

@@ -4,11 +4,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.poo.bank.Account;
 import org.poo.bank.Bank;
-import org.poo.bank.Transaction;
+import org.poo.bank.transactions.Transaction;
 import org.poo.bank.User;
 import org.poo.fileio.CommandInput;
 
-import java.util.Iterator;
 
 public final class DeleteAccountCommand extends Command {
     private boolean couldnotDetlete = true;

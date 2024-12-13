@@ -2,12 +2,12 @@ package org.poo.command;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.poo.bank.*;
+import org.poo.bank.transactions.SplitTransaction;
 import org.poo.fileio.CommandInput;
 
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Optional;
 
 public final class SplitPaymentCommand extends Command {
 
@@ -17,7 +17,6 @@ public final class SplitPaymentCommand extends Command {
 
     public void execute(final CommandInput input) {
         double realAmount = input.getAmount() / input.getAccounts().size();
-        System.out.println(realAmount);
         List<Account> splitingAccounts = new ArrayList<Account>();
         List<User> splitingUsers = new ArrayList<User>();
         for (User user : bank.getUsers()) {

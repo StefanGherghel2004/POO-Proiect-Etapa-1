@@ -19,7 +19,7 @@ public abstract class Command {
         this.bank = new Bank(bank);
         this.commandOutput = mapper.createObjectNode();
     }
-    abstract public void execute(CommandInput input);
+    public abstract void execute(CommandInput input);
 
-    abstract public void updateOutput(CommandInput input, ObjectMapper mapper);
+    public abstract void updateOutput(CommandInput input, ObjectMapper mapper);
 }

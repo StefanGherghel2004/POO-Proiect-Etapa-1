@@ -4,13 +4,12 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.Getter;
 import lombok.Setter;
 import org.poo.bank.*;
+import org.poo.bank.transactions.CardTransaction;
 import org.poo.fileio.CommandInput;
 
 @Getter
 @Setter
 public final class CreateCardCommand extends Command {
-
-    public boolean oneTime;
 
     public CreateCardCommand(final Bank bank, final ObjectMapper mapper) {
         super(bank, mapper);
@@ -25,8 +24,7 @@ public final class CreateCardCommand extends Command {
                         return;
                     }
                     Card card = new Card();
-                    if (oneTime) {
-                        System.out.println("ACOLOOOOOOOOO");
+                    if (input.getCommand().equals("createOneTimeCard")) {
                         card.setOneTime(true);
                     }
                     account.addCard(card);

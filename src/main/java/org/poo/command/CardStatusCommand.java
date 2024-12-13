@@ -3,6 +3,7 @@ package org.poo.command;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.poo.bank.*;
+import org.poo.bank.transactions.Transaction;
 import org.poo.fileio.CommandInput;
 
 public final class CardStatusCommand extends Command {
@@ -35,7 +36,7 @@ public final class CardStatusCommand extends Command {
             output.put("description", "Card not found");
             output.put("timestamp", input.getTimestamp());
             commandOutput.put("command", "checkCardStatus");
-            commandOutput.put("output", output);
+            commandOutput.set("output", output);
             commandOutput.put("timestamp", input.getTimestamp());
         }
     }
