@@ -1,7 +1,9 @@
 package org.poo.command;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.poo.bank.*;
+import org.poo.bank.Bank;
+import org.poo.bank.Account;
+import org.poo.bank.User;
 import org.poo.bank.transactions.Transaction;
 import org.poo.bank.transactions.TransferTransaction;
 import org.poo.fileio.CommandInput;
@@ -12,27 +14,30 @@ import java.util.Map;
 public final class SendMoneyCommand extends Command {
 
     public SendMoneyCommand(final Bank bank, final ObjectMapper mapper) {
-        super(bank,mapper);
+        super(bank, mapper);
     }
 
     private static String findRealAccount(final Map<String, List<String>> aliases, final String alias) {
-        // Iterate through the map
+
         for (Map.Entry<String, List<String>> entry : aliases.entrySet()) {
             String realAccount = entry.getKey();
             List<String> aliasList = entry.getValue();
 
-            // Check if the alias exists in the list
             if (aliasList.contains(alias)) {
-                return realAccount; // Return the associated account
+                return realAccount;
             }
         }
-        return null; // No match found
+        return null;
     }
 
+    /**
+     *
+     * @param input
+     */
     public void execute(final CommandInput input) {
         String senderIban = findRealAccount(bank.getAliases(), input.getAccount());
         if (senderIban != null) {
-            return;
+            return; // daca este un alias atunci nu e in regula comanda
         }
         String receiverIban = findRealAccount(bank.getAliases(), input.getReceiver());
         Account sender = null;
@@ -60,9 +65,9 @@ public final class SendMoneyCommand extends Command {
 
             if (sender.getBalance() >= input.getAmount()) {
                 senderUser.addTransaction(new TransferTransaction(input.getDescription(), input.getTimestamp(), receiver.getIban(), sender.getIban(), "sent", input.getAmount() + " " +  sender.getCurrency()));
-                sender.addTransaction(new TransferTransaction(input.getDescription(), input.getTimestamp(), receiver.getIban(), sender.getIban(), "sent", input.getAmount() + " " +  sender.getCurrency()));;
+                sender.addTransaction(new TransferTransaction(input.getDescription(), input.getTimestamp(), receiver.getIban(), sender.getIban(), "sent", input.getAmount() + " " +  sender.getCurrency()));
                 receiverUser.addTransaction(new TransferTransaction(input.getDescription(), input.getTimestamp(), receiver.getIban(), sender.getIban(), "received", input.getAmount() * rate + " " +  receiver.getCurrency()));
-                receiver.addTransaction(new TransferTransaction(input.getDescription(), input.getTimestamp(), receiver.getIban(), sender.getIban(), "received", input.getAmount() * rate + " " +  receiver.getCurrency()));;
+                receiver.addTransaction(new TransferTransaction(input.getDescription(), input.getTimestamp(), receiver.getIban(), sender.getIban(), "received", input.getAmount() * rate + " " +  receiver.getCurrency()));
                 sender.setBalance(sender.getBalance() - input.getAmount());
                 receiver.setBalance(receiver.getBalance() + rate * input.getAmount());
             } else {
@@ -72,6 +77,11 @@ public final class SendMoneyCommand extends Command {
         }
     }
 
+    /**
+     *
+     * @param input
+     * @param mapper
+     */
     public void updateOutput(final CommandInput input, final ObjectMapper mapper) {
 
     }

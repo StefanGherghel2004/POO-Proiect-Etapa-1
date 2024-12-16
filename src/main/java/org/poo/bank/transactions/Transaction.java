@@ -16,11 +16,17 @@ public class Transaction {
         this.timestamp = timestamp;
     }
 
+    /**
+     *
+     * @param mapper
+     * @return
+     */
     public ObjectNode toJSON(final ObjectMapper mapper) {
         ObjectNode json = mapper.createObjectNode();
         json.put("description", description);
         json.put("timestamp", timestamp);
         return json;
     }
+
 
 }

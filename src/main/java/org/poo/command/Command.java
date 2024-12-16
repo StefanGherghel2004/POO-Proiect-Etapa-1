@@ -6,9 +6,6 @@ import lombok.Getter;
 import lombok.Setter;
 import org.poo.bank.Bank;
 import org.poo.fileio.CommandInput;
-import org.poo.fileio.ObjectInput;
-
-import java.io.IOException;
 
 @Getter
 @Setter
@@ -19,7 +16,17 @@ public abstract class Command {
         this.bank = new Bank(bank);
         this.commandOutput = mapper.createObjectNode();
     }
+
+    /**
+     *
+     * @param input
+     */
     public abstract void execute(CommandInput input);
 
+    /**
+     *
+     * @param input
+     * @param mapper
+     */
     public abstract void updateOutput(CommandInput input, ObjectMapper mapper);
 }

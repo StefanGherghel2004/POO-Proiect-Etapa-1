@@ -15,16 +15,26 @@ public class SpendingsReportCommand extends Command {
         super(bank, mapper);
     }
 
+    /**
+     *
+     * @param input
+     */
     public void execute(final CommandInput input) {
 
     }
 
+    /**
+     *
+     * @param input
+     * @param mapper
+     */
     public void updateOutput(final CommandInput input, final ObjectMapper mapper) {
         for (User user : bank.getUsers()) {
             for (Account account : user.getAccounts()) {
                 if (account.getIban().equals(input.getAccount()) && account.getType().equals("savings")) {
                     ObjectNode output = mapper.createObjectNode();
-                    output.put("error", "This kind of report is not supported for a saving account");
+                    output.put("error",
+                            "This kind of report is not supported for a saving account");
                     commandOutput.set("output", output);
                     commandOutput.put("command", "spendingsReport");
                     commandOutput.put("timestamp", input.getTimestamp());

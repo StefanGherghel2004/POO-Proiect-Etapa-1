@@ -35,11 +35,24 @@ public class User {
         email = user.getEmail();
     }
 
+    /**
+     *
+     * @param input
+     */
     public void addAccount(final CommandInput input) {
-        Account account = new Account(generateIBAN(), 0, input.getCurrency(), input.getAccountType(), input.getInterestRate());
+        Account account = new Account(generateIBAN(), 0, input.getCurrency(),
+                                      input.getAccountType(), input.getInterestRate());
         accounts.add(account);
+        addTransaction(new Transaction("New account created", input.getTimestamp()));
+        accounts.getLast().addTransaction(new Transaction("New account created",
+                                          input.getTimestamp()));
     }
 
+    /**
+     *
+     * @param mapper
+     * @return
+     */
     public ObjectNode toJSON(final ObjectMapper mapper) {
         ObjectNode json = mapper.createObjectNode();
         json.put("firstName", firstName);
@@ -53,16 +66,39 @@ public class User {
         return json;
     }
 
+    /**
+     *
+     * @param transaction
+     */
     public void addTransaction(final Transaction transaction) {
         transactions.add(transaction);
     }
 
+    /**
+     *
+     * @param cardNumber
+     * @return
+     */
     public Account findAccountHasCard(final String cardNumber) {
         for (Account account : accounts) {
             for (Card card : account.getCards()) {
                 if (card.getCardNumber().equals(cardNumber)) {
                     return account;
                 }
+            }
+        }
+        return null;
+    }
+
+    /**
+     *
+     * @param iban
+     * @return
+     */
+    public Account getAccount(final String iban) {
+        for (Account account : accounts) {
+            if (account.getIban().equals(iban)) {
+                return account;
             }
         }
         return null;

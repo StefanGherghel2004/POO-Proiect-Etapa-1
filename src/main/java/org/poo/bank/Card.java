@@ -19,6 +19,11 @@ public class Card {
         status = "active";
     }
 
+    /**
+     *
+     * @param mapper
+     * @return
+     */
     public ObjectNode toJSON(final ObjectMapper mapper) {
         ObjectNode json = mapper.createObjectNode();
         json.put("cardNumber", cardNumber);
@@ -26,6 +31,10 @@ public class Card {
         return json;
     }
 
+    /**
+     *
+     * @return
+     */
     public boolean isFrozen() {
         return status.equals("frozen");
     }

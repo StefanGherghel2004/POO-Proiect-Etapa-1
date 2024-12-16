@@ -11,6 +11,10 @@ public final class SetAliasCommand extends Command {
         super(bank, mapper);
     }
 
+    /**
+     *
+     * @param input
+     */
     public void execute(final CommandInput input) {
         bank.addAlias(input.getAccount(), input.getAlias());
         Account account = bank.findAccount(input.getAccount());
@@ -19,6 +23,11 @@ public final class SetAliasCommand extends Command {
         }
     }
 
+    /**
+     *
+     * @param input
+     * @param mapper
+     */
     public void updateOutput(final CommandInput input, final ObjectMapper mapper) {
 
     }

@@ -11,17 +11,27 @@ public final class SetMinimumBalanceCommand extends Command {
         super(bank, mapper);
     }
 
+    /**
+     *
+     * @param input
+     */
     public void execute(final CommandInput input) {
 
         Account account = bank.findAccount(input.getAccount());
 
         account.setMinBalance(input.getAmount());
         account.setSetMinBalance(true);
-        if (account.getBalance() <= account.getMinBalance())
+        if (account.getBalance() <= account.getMinBalance()) {
             account.frozeCards();
+        }
 
     }
 
+    /**
+     *
+     * @param input
+     * @param mapper
+     */
     public void updateOutput(final CommandInput input, final ObjectMapper mapper) {
 
     }

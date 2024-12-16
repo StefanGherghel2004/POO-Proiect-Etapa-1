@@ -10,8 +10,17 @@ import org.poo.fileio.ObjectInput;
 import static org.poo.utils.Utils.resetRandom;
 
 public class InputHandler {
+    public static final double ROUNDING_UTIL = 10000.0;
 
-    public static Command handler(final CommandInput command, final Bank bank, final ObjectMapper mapper) {
+    /**
+     *
+     * @param command
+     * @param bank
+     * @param mapper
+     * @return
+     */
+    public static Command handler(final CommandInput command, final Bank bank,
+                                  final ObjectMapper mapper) {
         switch (command.getCommand()) {
             case "printUsers" -> {
                 return new PrintUsersCommand(bank, mapper);
@@ -68,6 +77,11 @@ public class InputHandler {
 
     }
 
+    /**
+     *
+     * @param input
+     * @param output
+     */
     public static void bankHandler(final ObjectInput input, final ArrayNode output) {
         ObjectMapper mapper = new ObjectMapper();
         Bank bank = new Bank()

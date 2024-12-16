@@ -9,19 +9,22 @@ import lombok.Setter;
 @Setter
 public class Commerciant {
     private String name;
-    private double stolenMoney;
+    private double receivedAmount;
 
     public Commerciant(final String name) {
         this.name = name;
-        this.stolenMoney = 0;
+        this.receivedAmount = 0;
     }
 
+    /**
+     *
+     * @param mapper
+     * @return
+     */
     public ObjectNode toJSON(final ObjectMapper mapper) {
         ObjectNode json = mapper.createObjectNode();
-        double value = stolenMoney;
-        double roundedValue = value * 100000.0 / 100000.0;
         json.put("commerciant", name);
-        json.put("total", roundedValue);
+        json.put("total", receivedAmount);
         return json;
     }
 }

@@ -29,6 +29,11 @@ public class SplitTransaction extends Transaction {
         this.errorDescription = errorDescription;
     }
 
+    /**
+     *
+     * @param mapper
+     * @return
+     */
     public ObjectNode toJSON(final ObjectMapper mapper) {
         ObjectNode json = super.toJSON(mapper);
         json.put("amount", amount);

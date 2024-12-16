@@ -10,13 +10,22 @@ import org.poo.fileio.CommandInput;
 public final class PrintTransactionsCommand extends Command {
 
     public PrintTransactionsCommand(final Bank bank, final ObjectMapper mapper) {
-        super(bank,mapper);
+        super(bank, mapper);
     }
 
+    /**
+     *
+     * @param input
+     */
     public void execute(final CommandInput input) {
 
     }
 
+    /**
+     *
+     * @param input
+     * @param mapper
+     */
     public void updateOutput(final CommandInput input, final ObjectMapper mapper) {
         commandOutput.put("command", "printTransactions");
         ArrayNode output = mapper.createArrayNode();

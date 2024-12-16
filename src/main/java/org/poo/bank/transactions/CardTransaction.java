@@ -5,6 +5,8 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import lombok.Getter;
 import lombok.Setter;
 
+import static org.poo.inputHandler.InputHandler.ROUNDING_UTIL;
+
 @Getter
 @Setter
 public class CardTransaction extends Transaction {
@@ -25,18 +27,60 @@ public class CardTransaction extends Transaction {
         this.commerciant = commerciant;
     }
 
+
+    /**
+     *
+     * @param mapper
+     * @return
+     */
     public ObjectNode toJSON(final ObjectMapper mapper) {
         ObjectNode json = super.toJSON(mapper);
         double rounded = amount;
-        double roundedValue = Math.round(rounded * 10000.0) / 10000.0;
+        double roundedValue = Math.round(rounded * ROUNDING_UTIL) / ROUNDING_UTIL;
         if (successFulPayment) {
             json.put("amount", roundedValue);
             json.put("commerciant", commerciant);
-        } else if(cardCreation) {
+        } else if (cardCreation) {
             json.put("account", account);
             json.put("card", card);
             json.put("cardHolder", cardholder);
         }
         return json;
     }
+
+    /**
+     *
+     * @param newDescription
+     * @return
+     */
+    public CardTransaction changeDescription(final String newDescription) {
+        return new CardTransaction(
+                newDescription,
+                getTimestamp(),
+                account,
+                card,
+                cardholder,
+                amount,
+                commerciant
+        );
+    }
+
+    /**
+     *
+     * @param number
+     * @return
+     */
+    public CardTransaction changeNumber(final String number) {
+        return new CardTransaction(
+                getDescription(),
+                getTimestamp(),
+                account,
+                number,
+                cardholder,
+                amount,
+                commerciant
+        );
+    }
+
+
 }

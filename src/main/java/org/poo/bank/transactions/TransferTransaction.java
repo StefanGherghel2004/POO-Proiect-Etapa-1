@@ -9,8 +9,9 @@ public class TransferTransaction extends Transaction {
     private String senderIBAN;
     private String transferType;
 
-    public TransferTransaction(final String description, final int timestamp, final String receiverIBAN,
-                               final String senderIBAN, final String transferType, final String amount) {
+    public TransferTransaction(final String description, final int timestamp,
+                               final String receiverIBAN, final String senderIBAN,
+                               final String transferType, final String amount) {
         super(description, timestamp);
         this.receiverIBAN = receiverIBAN;
         this.senderIBAN = senderIBAN;
@@ -18,6 +19,11 @@ public class TransferTransaction extends Transaction {
         this.amount = amount;
     }
 
+    /**
+     *
+     * @param mapper
+     * @return
+     */
     public ObjectNode toJSON(final ObjectMapper mapper) {
         ObjectNode json = super.toJSON(mapper);
         json.put("receiverIBAN", receiverIBAN);

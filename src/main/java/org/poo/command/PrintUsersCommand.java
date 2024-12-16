@@ -13,10 +13,19 @@ public final class PrintUsersCommand extends Command {
         super(bank, mapper);
     }
 
+    /**
+     *
+     * @param input
+     */
     public void execute(final CommandInput input) {
         // method does not make changes in bank class
     }
 
+    /**
+     *
+     * @param input
+     * @param mapper
+     */
     public void updateOutput(final CommandInput input, final ObjectMapper mapper) {
         commandOutput.put("command", "printUsers");
         ArrayNode users = mapper.createArrayNode();

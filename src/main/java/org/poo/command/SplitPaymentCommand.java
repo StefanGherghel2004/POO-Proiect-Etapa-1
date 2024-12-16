@@ -1,7 +1,9 @@
 package org.poo.command;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.poo.bank.*;
+import org.poo.bank.Account;
+import org.poo.bank.Bank;
+import org.poo.bank.User;
 import org.poo.bank.transactions.SplitTransaction;
 import org.poo.fileio.CommandInput;
 
@@ -15,6 +17,10 @@ public final class SplitPaymentCommand extends Command {
         super(bank, mapper);
     }
 
+    /**
+     *
+     * @param input
+     */
     public void execute(final CommandInput input) {
         double realAmount = input.getAmount() / input.getAccounts().size();
         List<Account> splitingAccounts = new ArrayList<Account>();
@@ -63,6 +69,11 @@ public final class SplitPaymentCommand extends Command {
         }
     }
 
+    /**
+     *
+     * @param input
+     * @param mapper
+     */
     public void updateOutput(final CommandInput input, final ObjectMapper mapper) {
 
     }

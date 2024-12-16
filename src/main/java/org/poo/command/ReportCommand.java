@@ -6,7 +6,11 @@ import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import lombok.Getter;
 import lombok.Setter;
-import org.poo.bank.*;
+import org.poo.bank.Account;
+import org.poo.bank.Bank;
+import org.poo.bank.Commerciant;
+
+import org.poo.bank.User;
 import org.poo.bank.transactions.Transaction;
 import org.poo.fileio.CommandInput;
 
@@ -15,31 +19,49 @@ import java.util.List;
 
 @Getter
 @Setter
-public final  class ReportCommand extends Command{
+public final  class ReportCommand extends Command {
 
     private List<Commerciant> commerciantsList = new ArrayList<>();
 
+    /**
+     *
+     * @param name
+     */
     public void addCommerciant(final String name) {
         commerciantsList.add(new Commerciant(name));
     }
 
+    /**
+     *
+     * @param name
+     * @param amount
+     */
     public void increaseCommerciantMoney(final String name, final double amount) {
         commerciantsList.stream()
                 .filter(commerciant -> commerciant.getName().equals(name)) // Find the commerciant with the given name
                 .findFirst() // Get the first match
-                .ifPresent(commerciant -> commerciant.setStolenMoney(commerciant.getStolenMoney() + amount)); // Increase stolenMoney
+                .ifPresent(commerciant -> commerciant.setReceivedAmount(commerciant.getReceivedAmount() + amount)); // Increase receivedAmount
     }
 
-    public boolean spendingsReport;
+    private boolean spendingsReport;
 
     public ReportCommand(final Bank bank, final ObjectMapper mapper) {
         super(bank, mapper);
     }
 
+    /**
+     *
+     * @param input
+     */
     public void execute(final CommandInput input) {
 
     }
 
+    /**
+     *
+     * @param input
+     * @param mapper
+     */
     public void updateOutput(final CommandInput input, final ObjectMapper mapper) {
 
         ObjectNode output = mapper.createObjectNode();
@@ -70,10 +92,10 @@ public final  class ReportCommand extends Command{
             } else {
                 transactions.addAll(
                         target.getTransactions().stream()
-                                .filter(transaction ->
-                                        "Card payment".equals(transaction.getDescription()) && // Include only "Card payment"
-                                                transaction.getTimestamp() >= input.getStartTimestamp() &&
-                                                transaction.getTimestamp() <= input.getEndTimestamp()
+                                .filter(trans ->
+                                        "Card payment".equals(trans.getDescription())
+                                                && trans.getTimestamp() >= input.getStartTimestamp()
+                                                && trans.getTimestamp() <= input.getEndTimestamp()
                                 )
                                 .map(transaction -> transaction.toJSON(mapper)) // Convert to JSON
                                 .toList() // Collect as a List
@@ -86,17 +108,19 @@ public final  class ReportCommand extends Command{
                     // Check if the transaction is an ObjectNode
                         ObjectNode transactionObject = (ObjectNode) transaction;
                         // Extract the commerciant name
-                        String commerciantName = transactionObject.has("commerciant") ?
-                                transactionObject.get("commerciant").asText() : null;
+                        String commerciantName = transactionObject.has("commerciant")
+                                ? transactionObject.get("commerciant").asText() : null;
 
                         if (commerciantName != null
                                 && !getCommerciantsList().stream()
-                                        .anyMatch(commerciant -> commerciant.getName().equals(commerciantName))) {
+                                        .anyMatch(commerciant -> commerciant.getName().
+                                                                equals(commerciantName))) {
                             addCommerciant(commerciantName);
                         }
 
                         if (commerciantName != null) {
-                            increaseCommerciantMoney(commerciantName, transactionObject.get("amount").asDouble());
+                            increaseCommerciantMoney(commerciantName,
+                                                     transactionObject.get("amount").asDouble());
                         }
                 }
 

@@ -4,7 +4,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.poo.bank.Account;
 import org.poo.bank.Bank;
-import org.poo.bank.transactions.Transaction;
 import org.poo.bank.User;
 import org.poo.fileio.CommandInput;
 
@@ -17,30 +16,37 @@ public final class InterestCommand extends Command {
         super(bank, mapper);
     }
 
+    /**
+     *
+     * @param input
+     */
     public void execute(final CommandInput input) {
-            for ( User user : bank.getUsers()) {
-                for (Account account : user.getAccounts()) {
-                    if (account.getIban().equals(input.getAccount())) {
-                        if (!account.getType().equals("savings")) {
-                            notSavings = true;
-                            return;
-                        }
-                        if (input.getCommand().equals("changeInterestRate")) {
-                            account.setInterestRate(input.getInterestRate());
-                            Transaction transaction = new Transaction("Interest rate of the account changed to " + account.getInterestRate(), input.getTimestamp());
-                            account.addTransaction(transaction);
-                            user.addTransaction(transaction);
-                        } else {
-                            account.setBalance(account.getBalance() + account.getInterestRate() * account.getBalance() / 100);
-                        }
-                        found = true;
-                        return;
+        Account account = bank.findAccount(input.getAccount());
+        if (account == null) {
+            return;
+        }
+        User user = bank.findUserHasAccount(input.getAccount());
 
-                    }
-                }
-            }
+        if (!account.getType().equals("savings")) {
+            notSavings = true;
+            return;
+        }
+
+        if (input.getCommand().equals("changeInterestRate")) {
+            account.changeInterestRate(input.getInterestRate(), input.getTimestamp());
+            user.addTransaction(account.getTransactions().getLast());
+        } else {
+            account.addInterest();
+        }
+
+        found = true;
     }
 
+    /**
+     *
+     * @param input
+     * @param mapper
+     */
     public void updateOutput(final CommandInput input, final ObjectMapper mapper) {
             if (!found) {
                 commandOutput.put("command", input.getCommand());

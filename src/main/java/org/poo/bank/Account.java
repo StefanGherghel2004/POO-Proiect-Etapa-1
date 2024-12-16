@@ -35,6 +35,11 @@ public class Account {
         this.interestRate = interestRate;
     }
 
+    /**
+     *
+     * @param mapper
+     * @return
+     */
     public ObjectNode toJSON(final ObjectMapper mapper) {
         ObjectNode json = mapper.createObjectNode();
         json.put("IBAN", iban);
@@ -49,22 +54,43 @@ public class Account {
         return json;
     }
 
+    /**
+     *
+     * @param card
+     */
     public void addCard(final Card card) {
         cards.add(card);
     }
 
+    /**
+     *
+     * @param amount
+     */
     public void addFunds(final double amount) {
         balance += amount;
     }
 
+    /**
+     *
+     * @param alias
+     */
     public void addAlias(final String alias) {
         aliases.add(alias);
     }
 
+    /**
+     *
+     * @param transaction
+     */
     public void addTransaction(final Transaction transaction) {
         transactions.add(transaction);
     }
 
+    /**
+     *
+     * @param cardNumber
+     * @return
+     */
     public Card findCard(final String cardNumber) {
         for (Card card : cards) {
             if (card.getCardNumber().equals(cardNumber)) {
@@ -74,10 +100,32 @@ public class Account {
         return null;
     }
 
+    /**
+     *
+     */
     public void frozeCards() {
         for (Card card : cards) {
             card.setStatus("frozen");
         }
     }
+
+    /**
+     *
+     */
+    public void addInterest() {
+        balance = balance + balance * (interestRate / 100);
+    }
+
+    /**
+     *
+     * @param rate
+     * @param timestamp
+     */
+    public void changeInterestRate(final double rate, final int timestamp) {
+        interestRate = rate;
+        Transaction transaction = new Transaction("Interest rate of the account changed to " + interestRate, timestamp);
+        addTransaction(transaction);
+    }
+
 
 }
