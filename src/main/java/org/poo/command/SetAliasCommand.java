@@ -12,8 +12,11 @@ public final class SetAliasCommand extends Command {
     }
 
     /**
+     * Executes the SetAliasCommand. This method sets an alias for the specified account.
+     * It first adds the alias to the bank's records,
+     * then to the specific account's alias list.
      *
-     * @param input
+     * @param input The input data containing the account iban and alias to be set.
      */
     public void execute(final CommandInput input) {
         bank.addAlias(input.getAccount(), input.getAlias());
@@ -24,11 +27,12 @@ public final class SetAliasCommand extends Command {
     }
 
     /**
-     *
+     * At the moment this execution of this command does not update the output
+     * so this method is empty
      * @param input
      * @param mapper
      */
     public void updateOutput(final CommandInput input, final ObjectMapper mapper) {
-
+        // maybe deal with accountNotFound case
     }
 }

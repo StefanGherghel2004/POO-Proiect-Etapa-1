@@ -17,9 +17,10 @@ public class Transaction {
     }
 
     /**
+     * Converts the Transaction into a JSON representation
      *
-     * @param mapper
-     * @return
+     * @param mapper The ObjectMapper used to serialize the object to JSON.
+     * @return An ObjectNode containing the serialized JSON representation.
      */
     public ObjectNode toJSON(final ObjectMapper mapper) {
         ObjectNode json = mapper.createObjectNode();

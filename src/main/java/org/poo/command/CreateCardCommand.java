@@ -19,8 +19,12 @@ public final class CreateCardCommand extends Command {
     }
 
     /**
+     * Executes the command to create a new card for the specified user and account.
+     * This method handles the logic for creating a new card (standard or one-time)
+     * The card is then associated with the specified account,
+     * and a card transaction is created to reflect the card creation.
      *
-     * @param input
+     * @param input The input containing the necessary parameters to create the card.
      */
     public void execute(final CommandInput input) {
         User user = bank.findUserHasAccount(input.getAccount());
@@ -29,6 +33,7 @@ public final class CreateCardCommand extends Command {
         }
         Account account = user.getAccount(input.getAccount());
 
+        // Ensure the email matches the account holder's email
         if (!user.getEmail().equals(input.getEmail())) {
             return;
         }
@@ -39,20 +44,29 @@ public final class CreateCardCommand extends Command {
             card.setOneTime(true);
         }
 
+        // Add the card to the account
         account.addCard(card);
-        CardTransaction transaction = new CardTransaction("New card created", input.getTimestamp(), account.getIban(), card.getCardNumber(), user.getEmail(), input.getAmount(), input.getCommerciant());
+
+        // Create a new card transaction for the card creation
+        CardTransaction transaction = new CardTransaction("New card created",
+                input.getTimestamp(), account.getIban(), card.getCardNumber(), user.getEmail(),
+                input.getAmount(), input.getCommerciant());
         transaction.setCardCreation(true);
+
+        // Add the transaction to both the user and account
         user.addTransaction(transaction);
         account.addTransaction(transaction);
     }
 
     /**
+     * Updates the output after executing the command.
+     * This method could include any results or status related to the card creation.
      *
-     * @param input
-     * @param mapper
+     * @param input The input containing relevant data for the output.
+     * @param mapper The ObjectMapper used to format and update the output in JSON.
      */
     public void updateOutput(final CommandInput input, final ObjectMapper mapper) {
-
+        // empty in current implementation
     }
 
 }

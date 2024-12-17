@@ -36,8 +36,10 @@ public class User {
     }
 
     /**
+     * Adds a new account to the accounts list
+     * A transaction for the creation of the new account is added to the transactions list.
      *
-     * @param input
+     * @param input The input data used to create the new account (currency, type etc.).
      */
     public void addAccount(final CommandInput input) {
         Account account = new Account(generateIBAN(), 0, input.getCurrency(),
@@ -49,9 +51,11 @@ public class User {
     }
 
     /**
+     * Converts the User instance into a JSON representation.
+     * Each account is represented using its `toJSON` method.
      *
-     * @param mapper
-     * @return
+     * @param mapper The ObjectMapper used to serialize the object to JSON.
+     * @return An ObjectNode containing the JSON representation of the User.
      */
     public ObjectNode toJSON(final ObjectMapper mapper) {
         ObjectNode json = mapper.createObjectNode();
@@ -67,17 +71,20 @@ public class User {
     }
 
     /**
+     * Adds a transaction to the user's transaction list.
+     * Transactions are used to track activities or actions associated with the user.
      *
-     * @param transaction
+     * @param transaction The transaction to be added to the user's transaction history.
      */
     public void addTransaction(final Transaction transaction) {
         transactions.add(transaction);
     }
 
     /**
+     * Finds an account associated with the user that has a card matching the provided card number.
      *
-     * @param cardNumber
-     * @return
+     * @param cardNumber The card number to search for.
+     * @return The account associated with the card, or null if no such account is found.
      */
     public Account findAccountHasCard(final String cardNumber) {
         for (Account account : accounts) {
@@ -91,9 +98,10 @@ public class User {
     }
 
     /**
+     * Retrieves an account by its IBAN.
      *
-     * @param iban
-     * @return
+     * @param iban The IBAN of the account to search for.
+     * @return The account with the matching IBAN, or null if no such account is found.
      */
     public Account getAccount(final String iban) {
         for (Account account : accounts) {

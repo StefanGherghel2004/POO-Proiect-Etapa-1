@@ -10,18 +10,28 @@ import org.poo.bank.transactions.CardTransaction;
 import org.poo.bank.transactions.Transaction;
 import org.poo.fileio.CommandInput;
 
+import static org.poo.outputConstants.OutputConstants.CARD_FROZEN;
+import static org.poo.outputConstants.OutputConstants.FUNDS_ERROR;
+import static org.poo.outputConstants.OutputConstants.CARD_DESTROYED;
+import static org.poo.outputConstants.OutputConstants.CARD_CREATED;
 import static org.poo.utils.Utils.generateCardNumber;
 
 public final class PayOnlineCommand extends Command {
-
+    // Flag to indicate if the card was not found
     private boolean cardNotFound;
     public PayOnlineCommand(final Bank bank, final ObjectMapper mapper) {
         super(bank, mapper);
     }
 
     /**
+     * Executes the pay online transaction, which involves:
+     * 1. Verifying that the card exists.
+     * 2. Ensuring the card is not frozen.
+     * 3. Checking if the account has sufficient funds for the transaction.
+     * 4. Proceeding with the payment, adjusting balances, and handling one-time cards.
+     * 5. Generating appropriate transactions for the action.
      *
-     * @param input
+     * @param input The CommandInput containing the necessary information.
      */
     public void execute(final CommandInput input) {
         User user = bank.findUserHasCard(input.getCardNumber());
@@ -33,22 +43,25 @@ public final class PayOnlineCommand extends Command {
         Account account = user.findAccountHasCard(input.getCardNumber());
         Card card = account.findCard(input.getCardNumber());
 
+        // If the card is frozen, record the transaction and exit
         if (card.isFrozen()) {
-            user.addTransaction(new Transaction("The card is frozen",
+            user.addTransaction(new Transaction(CARD_FROZEN,
                     input.getTimestamp()));
             return;
         }
 
         double amount = bank.convert(account.getCurrency(), input.getCurrency(), input.getAmount());
 
+        // If the account balance is insufficient, record the transaction and exit
         if (account.getBalance() < amount) {
-            user.addTransaction(new Transaction("Insufficient funds",
+            user.addTransaction(new Transaction(FUNDS_ERROR,
                     input.getTimestamp()));
             return;
         }
 
+        // If the payment would cause the account balance to go below the minimum, freeze the card
         if (account.getBalance() - amount <= account.getMinBalance()) {
-            user.addTransaction(new Transaction("The card is frozen",
+            user.addTransaction(new Transaction(CARD_FROZEN,
                     input.getTimestamp()));
             card.setStatus("frozen");
             return;
@@ -65,16 +78,18 @@ public final class PayOnlineCommand extends Command {
                 input.getCommerciant()
         );
 
+        // Mark the payment as successful and add the transactions
         transaction.setSuccessFulPayment(true);
         user.addTransaction(transaction);
         account.addTransaction(transaction);
 
+        // If the card is a one-time card, destroy the card and issue a new one
         if (card.isOneTime()) {
-            CardTransaction transactionDestroyed = transaction.changeDescription("The card has been destroyed");
+            CardTransaction transactionDestroyed = transaction.changeDescription(CARD_DESTROYED);
 
             card.setCardNumber(generateCardNumber());
 
-            CardTransaction transactionCreate = transaction.changeDescription("New card created")
+            CardTransaction transactionCreate = transaction.changeDescription(CARD_CREATED)
                                                             .changeNumber(card.getCardNumber());
 
             transactionDestroyed.setCardCreation(true);
@@ -87,9 +102,10 @@ public final class PayOnlineCommand extends Command {
     }
 
     /**
+     * Updates the output in case the card was not found.
      *
-     * @param input
-     * @param mapper
+     * @param input The CommandInput containing the timestamp for the error message.
+     * @param mapper The ObjectMapper used to construct the JSON output.
      */
     public void updateOutput(final CommandInput input, final ObjectMapper mapper) {
         if (cardNotFound) {

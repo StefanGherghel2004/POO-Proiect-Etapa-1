@@ -19,7 +19,9 @@ public class SplitTransaction extends Transaction {
     private String errorDescription;
 
 
-    public SplitTransaction(final String description, final int timestamp, final String currency, final List<String> accounts, final double amount, final String errorDescription) {
+    public SplitTransaction(final String description, final int timestamp, final String currency,
+                            final List<String> accounts, final double amount,
+                            final String errorDescription) {
         super(description, timestamp);
         this.currency = currency;
         this.amount = amount;
@@ -30,9 +32,11 @@ public class SplitTransaction extends Transaction {
     }
 
     /**
+     * Converts the current SplitTransaction instance into a JSON representation.
+     * If there is an error in the transaction, the error description is included.
      *
-     * @param mapper
-     * @return
+     * @param mapper The ObjectMapper used to create JSON.
+     * @return An ObjectNode containing the serialized JSON representation of current transaction.
      */
     public ObjectNode toJSON(final ObjectMapper mapper) {
         ObjectNode json = super.toJSON(mapper);

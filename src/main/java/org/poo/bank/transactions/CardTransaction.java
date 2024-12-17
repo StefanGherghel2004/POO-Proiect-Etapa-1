@@ -18,7 +18,9 @@ public class CardTransaction extends Transaction {
     private double amount;
     private String commerciant;
 
-    public CardTransaction(final String description, final int timestamp, final String account, final String card, final String cardholder, final double amount, final String commerciant) {
+    public CardTransaction(final String description, final int timestamp,
+                           final String account, final String card, final String cardholder,
+                           final double amount, final String commerciant) {
         super(description, timestamp);
         this.account = account;
         this.card = card;
@@ -29,9 +31,13 @@ public class CardTransaction extends Transaction {
 
 
     /**
+     * Converts the current transaction to a JSON representation.
+     * The resulting JSON will contain different fields depending on the object's state.
+     * If the payment was successful, it includes the amount and commerciant details.
+     * If it is a card creation, it includes account, card, and cardholder details.
      *
-     * @param mapper
-     * @return
+     * @param mapper The ObjectMapper used to create the JSON.
+     * @return An ObjectNode containing the serialized JSON representation of current transaction.
      */
     public ObjectNode toJSON(final ObjectMapper mapper) {
         ObjectNode json = super.toJSON(mapper);
@@ -49,9 +55,11 @@ public class CardTransaction extends Transaction {
     }
 
     /**
+     * Creates a new instance of CardTransaction with the updated description.
+     * Used for non-repetitive code if we want the same base transaction.
      *
-     * @param newDescription
-     * @return
+     * @param newDescription The new description to set.
+     * @return A new CardTransaction instance with updated description.
      */
     public CardTransaction changeDescription(final String newDescription) {
         return new CardTransaction(
@@ -66,9 +74,11 @@ public class CardTransaction extends Transaction {
     }
 
     /**
+     * Creates a new instance of CardTransaction with the updated card number.
+     * Used for non-repetitive code if we want the same base transaction.
      *
-     * @param number
-     * @return
+     * @param number The new card number to set for the transaction.
+     * @return A new CardTransaction object with the updated card number.
      */
     public CardTransaction changeNumber(final String number) {
         return new CardTransaction(

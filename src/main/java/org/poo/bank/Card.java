@@ -20,9 +20,11 @@ public class Card {
     }
 
     /**
+     * Converts the Card object into a JSON representation.
+     * The JSON includes the card's card number and status.
      *
-     * @param mapper
-     * @return
+     * @param mapper The ObjectMapper used to create ObjectNode.
+     * @return An ObjectNode containing the JSON representation of the Card.
      */
     public ObjectNode toJSON(final ObjectMapper mapper) {
         ObjectNode json = mapper.createObjectNode();
@@ -32,8 +34,9 @@ public class Card {
     }
 
     /**
+     * Checks whether the card's status is "frozen" (cannot perform action with it)
      *
-     * @return
+     * @return A boolean indicating whether the card is frozen.
      */
     public boolean isFrozen() {
         return status.equals("frozen");

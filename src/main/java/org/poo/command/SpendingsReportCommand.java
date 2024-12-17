@@ -5,8 +5,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.poo.bank.Account;
 import org.poo.bank.Bank;
-import org.poo.bank.User;
 import org.poo.fileio.CommandInput;
+
+import static org.poo.outputConstants.OutputConstants.NOT_SAVINGS;
 
 
 public class SpendingsReportCommand extends Command {
@@ -16,7 +17,8 @@ public class SpendingsReportCommand extends Command {
     }
 
     /**
-     *
+     * The report consists of just updating the output and does not modify
+     * the bank instance so this method is empty
      * @param input
      */
     public void execute(final CommandInput input) {
@@ -24,29 +26,29 @@ public class SpendingsReportCommand extends Command {
     }
 
     /**
+     * Updates the output of the spendings report command. It generates a report by:
+     * 1. Verifying if the account type is "savings."
+     * 2. If it is a savings account, it outputs an error message.
+     * 3. If it is not a savings account, it delegates the report generation to the
+     * `ReportCommand` and sets the spendings report flag to true.
      *
-     * @param input
-     * @param mapper
+     * @param input  The input data containing account and timestamp information.
+     * @param mapper The object mapper used to create JSON nodes.
      */
     public void updateOutput(final CommandInput input, final ObjectMapper mapper) {
-        for (User user : bank.getUsers()) {
-            for (Account account : user.getAccounts()) {
-                if (account.getIban().equals(input.getAccount()) && account.getType().equals("savings")) {
-                    ObjectNode output = mapper.createObjectNode();
-                    output.put("error",
-                            "This kind of report is not supported for a saving account");
-                    commandOutput.set("output", output);
-                    commandOutput.put("command", "spendingsReport");
-                    commandOutput.put("timestamp", input.getTimestamp());
-                    return;
-                }
-            }
+        Account account = bank.findAccount(input.getAccount());
+        if (account != null && account.getType().equals("savings")) {
+            ObjectNode output = mapper.createObjectNode();
+            output.put("error", NOT_SAVINGS);
+            commandOutput.set("output", output);
+            commandOutput.put("command", "spendingsReport");
+            commandOutput.put("timestamp", input.getTimestamp());
+            return;
         }
+
         ReportCommand command = new ReportCommand(bank, mapper);
         command.setSpendingsReport(true);
         command.updateOutput(input, mapper);
-        command.getCommandOutput().remove("command");
-        command.getCommandOutput().put("command", "spendingsReport");
 
         commandOutput = command.getCommandOutput();
     }

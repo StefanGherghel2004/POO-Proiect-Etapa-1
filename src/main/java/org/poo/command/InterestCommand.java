@@ -17,8 +17,9 @@ public final class InterestCommand extends Command {
     }
 
     /**
+     * Executes the interest-related operations on the account.
      *
-     * @param input
+     * @param input The input containing the command details.
      */
     public void execute(final CommandInput input) {
         Account account = bank.findAccount(input.getAccount());
@@ -27,13 +28,18 @@ public final class InterestCommand extends Command {
         }
         User user = bank.findUserHasAccount(input.getAccount());
 
+
+        // If the account is not a savings account, set the 'notSavings' flag
+        // for output and return early
         if (!account.getType().equals("savings")) {
             notSavings = true;
             return;
         }
 
+        // If the command is "changeInterestRate", change the interest rate
         if (input.getCommand().equals("changeInterestRate")) {
             account.changeInterestRate(input.getInterestRate(), input.getTimestamp());
+            // adding the transaction (the method above added it for the account)
             user.addTransaction(account.getTransactions().getLast());
         } else {
             account.addInterest();
@@ -43,9 +49,14 @@ public final class InterestCommand extends Command {
     }
 
     /**
+     * Updates the output after executing the interest operation.
      *
-     * @param input
-     * @param mapper
+     * This method generates the output JSON based on the results of the execute method.
+     * If no valid account was found or the account is not a savings account,
+     * it adds an error message to the output.
+     *
+     * @param input The input containing the necessary data for generating the output.
+     * @param mapper The ObjectMapper instance used to format and generate the output.
      */
     public void updateOutput(final CommandInput input, final ObjectMapper mapper) {
             if (!found) {

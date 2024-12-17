@@ -9,15 +9,20 @@ import org.poo.fileio.ObjectInput;
 
 import static org.poo.utils.Utils.resetRandom;
 
-public class InputHandler {
+public final class InputHandler {
     public static final double ROUNDING_UTIL = 10000.0;
 
+    private InputHandler() {
+
+    }
+
     /**
+     * Handles a specific command input and returns the corresponding command object.
      *
-     * @param command
-     * @param bank
-     * @param mapper
-     * @return
+     * @param command The command input object that contains the details of the command.
+     * @param bank The bank instance which will be passed to the command.
+     * @param mapper The object mapper instance for JSON processing.
+     * @return The command object that corresponds to the given command input.
      */
     public static Command handler(final CommandInput command, final Bank bank,
                                   final ObjectMapper mapper) {
@@ -78,11 +83,15 @@ public class InputHandler {
     }
 
     /**
+     * Processes the bank input and handles the execution of all commands sequentially.
+     * This method takes in the input data, initializes a bank instance, processes each
+     * command, and accumulates the output for each executed command.
      *
-     * @param input
-     * @param output
+     * @param input The object input containing user data, exchange rates, and commands to execute.
+     * @param output The output array node where the results of executed commands will be added.
      */
     public static void bankHandler(final ObjectInput input, final ArrayNode output) {
+        resetRandom();
         ObjectMapper mapper = new ObjectMapper();
         Bank bank = new Bank()
                 .addUsers(input.getUsers())
@@ -102,6 +111,5 @@ public class InputHandler {
             }
         }
 
-        resetRandom();
     }
 }

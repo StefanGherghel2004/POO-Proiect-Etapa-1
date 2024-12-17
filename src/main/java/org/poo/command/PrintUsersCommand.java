@@ -14,17 +14,21 @@ public final class PrintUsersCommand extends Command {
     }
 
     /**
-     *
+     * The printing of users does not modify the bank instance so
+     * this method is empty
      * @param input
      */
     public void execute(final CommandInput input) {
-        // method does not make changes in bank class
+
     }
 
     /**
+     * Updates the output with the list of users in the bank.
+     * This method loops through all the users in the bank, converts each user's data
+     * to JSON using the `toJSON` method in User class.
      *
-     * @param input
-     * @param mapper
+     * @param input The input containing necessary details like the timestamp for the output.
+     * @param mapper The ObjectMapper instance used to convert user data into JSON format.
      */
     public void updateOutput(final CommandInput input, final ObjectMapper mapper) {
         commandOutput.put("command", "printUsers");

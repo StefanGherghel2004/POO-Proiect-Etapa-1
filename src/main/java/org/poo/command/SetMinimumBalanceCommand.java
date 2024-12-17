@@ -12,8 +12,11 @@ public final class SetMinimumBalanceCommand extends Command {
     }
 
     /**
+     * Executes the set minimum balance operation for an account.
+     * This method finds the account specified by the input, sets the minimum balance
+     * to the provided amount
      *
-     * @param input
+     * @param input The input containing the account and amount to set as the minimum balance.
      */
     public void execute(final CommandInput input) {
 
@@ -21,6 +24,9 @@ public final class SetMinimumBalanceCommand extends Command {
 
         account.setMinBalance(input.getAmount());
         account.setSetMinBalance(true);
+
+        // If the account's balance is less than or equal to
+        // the minimum balance, freeze the cards
         if (account.getBalance() <= account.getMinBalance()) {
             account.frozeCards();
         }
@@ -28,9 +34,10 @@ public final class SetMinimumBalanceCommand extends Command {
     }
 
     /**
+     * This command does not update the output at the moment
      *
-     * @param input
-     * @param mapper
+     * @param input The input containing the relevant details for the operation.
+     * @param mapper The ObjectMapper used for formatting the output.
      */
     public void updateOutput(final CommandInput input, final ObjectMapper mapper) {
 

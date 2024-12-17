@@ -20,9 +20,10 @@ public class TransferTransaction extends Transaction {
     }
 
     /**
+     * Converts the TransferTransaction into a JSON representation
      *
-     * @param mapper
-     * @return
+     * @param mapper The ObjectMapper used to serialize the object to JSON.
+     * @return An ObjectNode containing the serialized JSON representation.
      */
     public ObjectNode toJSON(final ObjectMapper mapper) {
         ObjectNode json = super.toJSON(mapper);

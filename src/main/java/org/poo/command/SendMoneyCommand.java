@@ -11,14 +11,16 @@ import org.poo.fileio.CommandInput;
 import java.util.List;
 import java.util.Map;
 
+import static org.poo.outputConstants.OutputConstants.FUNDS_ERROR;
+
 public final class SendMoneyCommand extends Command {
 
     public SendMoneyCommand(final Bank bank, final ObjectMapper mapper) {
         super(bank, mapper);
     }
 
-    private static String findRealAccount(final Map<String, List<String>> aliases, final String alias) {
-
+    private static String findRealAccount(final Map<String, List<String>> aliases,
+                                          final String alias) {
         for (Map.Entry<String, List<String>> entry : aliases.entrySet()) {
             String realAccount = entry.getKey();
             List<String> aliasList = entry.getValue();
@@ -39,42 +41,47 @@ public final class SendMoneyCommand extends Command {
         if (senderIban != null) {
             return; // daca este un alias atunci nu e in regula comanda
         }
-        String receiverIban = findRealAccount(bank.getAliases(), input.getReceiver());
-        Account sender = null;
-        Account receiver = null;
-        User senderUser = null;
-        User receiverUser = null;
-        for (User user : bank.getUsers()) {
-            for (Account account : user.getAccounts()) {
-                if (account.getIban().equals(input.getAccount()) || account.getIban().equals(senderIban)) {
-                    sender = account;
-                    senderUser = user;
-                }
-                if (account.getIban().equals(input.getReceiver()) || account.getIban().equals(receiverIban)) {
-                    receiver = account;
-                    receiverUser = user;
-                }
-            }
-        }
+
+        Account sender = bank.findAccount(input.getAccount());
+        Account receiver = bank.findAccount(input.getReceiver());
+
+        User senderUser = sender != null ? bank.findUserHasAccount(sender.getIban()) : null;
+        User receiverUser = receiver != null ? bank.findUserHasAccount(receiver.getIban()) : null;
+
         if (senderUser != null && !input.getEmail().equals(senderUser.getEmail())) {
             return;
         }
 
         if (sender != null && receiver != null) {
             double rate = bank.getRate(sender.getCurrency(), receiver.getCurrency());
+            double amount = input.getAmount();
 
             if (sender.getBalance() >= input.getAmount()) {
-                senderUser.addTransaction(new TransferTransaction(input.getDescription(), input.getTimestamp(), receiver.getIban(), sender.getIban(), "sent", input.getAmount() + " " +  sender.getCurrency()));
-                sender.addTransaction(new TransferTransaction(input.getDescription(), input.getTimestamp(), receiver.getIban(), sender.getIban(), "sent", input.getAmount() + " " +  sender.getCurrency()));
-                receiverUser.addTransaction(new TransferTransaction(input.getDescription(), input.getTimestamp(), receiver.getIban(), sender.getIban(), "received", input.getAmount() * rate + " " +  receiver.getCurrency()));
-                receiver.addTransaction(new TransferTransaction(input.getDescription(), input.getTimestamp(), receiver.getIban(), sender.getIban(), "received", input.getAmount() * rate + " " +  receiver.getCurrency()));
+                Transaction send = new TransferTransaction(input.getDescription(),
+                        input.getTimestamp(), receiver.getIban(), sender.getIban(),
+                        "sent", amountFormat(amount, 1, sender.getCurrency()));
+
+                senderUser.addTransaction(send);
+                sender.addTransaction(send);
+
+                Transaction receive = new TransferTransaction(input.getDescription(),
+                        input.getTimestamp(), receiver.getIban(), sender.getIban(),
+                        "received", amountFormat(amount, rate, receiver.getCurrency()));
+
+                receiverUser.addTransaction(receive);
+                receiver.addTransaction(receive);
+
                 sender.setBalance(sender.getBalance() - input.getAmount());
                 receiver.setBalance(receiver.getBalance() + rate * input.getAmount());
             } else {
-                senderUser.addTransaction(new Transaction("Insufficient funds", input.getTimestamp()));
-                sender.addTransaction(new Transaction("Insufficient funds", input.getTimestamp()));
+                senderUser.addTransaction(new Transaction(FUNDS_ERROR, input.getTimestamp()));
+                sender.addTransaction(new Transaction(FUNDS_ERROR, input.getTimestamp()));
             }
         }
+    }
+
+    private String amountFormat(final double amount, final double rate, final String currency) {
+        return amount * rate + " " + currency;
     }
 
     /**

@@ -17,9 +17,12 @@ public class Commerciant {
     }
 
     /**
+     * Converts the object into a JSON representation.
+     * The JSON includes the commerciant's name and the total received amount,
+     * respectively how much one user spent.
      *
-     * @param mapper
-     * @return
+     * @param mapper The ObjectMapper used to serialize the object to JSON.
+     * @return An ObjectNode containing a JSON representation of the commerciant.
      */
     public ObjectNode toJSON(final ObjectMapper mapper) {
         ObjectNode json = mapper.createObjectNode();
